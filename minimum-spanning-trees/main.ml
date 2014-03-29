@@ -49,4 +49,4 @@ let tree g = not (List.exists (fun n ->
                               (vertices g))
 let mst t g = tree t && vertices g = vertices t 
     
-let _ = mst t g
+let ismst = mst t g
