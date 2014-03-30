@@ -1,3 +1,5 @@
+#!/usr/bin/env swipl
+
 :- use_module(library(ordsets)).
 % :- use_module(library(sets)). % uncomment for sicstus
 
@@ -34,8 +36,8 @@ g1(2, [(1,2),
 
 mst(T, G) :-
         tree(T),
-        vertices(G, V),
-        vertices(T, V).
+        vertices(T, V),
+        vertices(G, V).
 
 tree(G) :-
          vertices(G, V),

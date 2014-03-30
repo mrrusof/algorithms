@@ -1,3 +1,5 @@
+#!/usr/bin/env ocaml
+
 module IntSet = Set.Make(struct type t = int let compare = compare end)
 
 let g = 
@@ -36,8 +38,8 @@ let t =
 let rec path a b g =
   List.mem (a,b) g ||
   List.mem (b,a) g ||
-  List.exists (fun (a', c) -> a'=a && path c b (List.filter ((<>) (a, c)) g)) g ||
-  List.exists (fun (c, a') -> a'=a && path c b (List.filter ((<>) (c, a)) g)) g
+  List.exists (fun (x, y) -> x=a && path y b (List.filter ((<>) (a, y)) g) ||
+                             y=a && path x b (List.filter ((<>) (x, a)) g)   ) g
 let vertices g =
   let rec vs = function
     | (x,y) :: g -> IntSet.add y (IntSet.add x (vs g))
@@ -47,6 +49,6 @@ let tree g = not (List.exists (fun n ->
                                 Printf.printf "searching for simple cycle for %n..." n;
                                 (path n n g && (Printf.printf "yes\n"; true)) || (Printf.printf "no\n"; false))
                               (vertices g))
-let mst t g = tree t && vertices g = vertices t 
+let mst t g = tree t && vertices t = vertices g
     
-let ismst = mst t g
+let _ = if mst t g then Printf.printf "T is a mst of G!\n"
