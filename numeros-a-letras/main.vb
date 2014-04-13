@@ -31,6 +31,6 @@ Public Function IntToText(adjective As Boolean, n As Long) As String
           IntToText(True, n \ 1000000) & " millones") _
       & IIf(n Mod 1000000 > 0, " " & IntToText(adjective, n Mod 1000000), "")
   Else
-    IntToText = "ERROR: intToText(" & adjective & ", " & n & ")"
+    IntToText = "ERROR: IntToText(" & adjective & ", " & n & ")"
   End If
 End Function
