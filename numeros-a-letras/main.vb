@@ -34,3 +34,9 @@ Public Function IntToText(adjective As Boolean, n As Long) As String
     IntToText = "ERROR: IntToText(" & adjective & ", " & n & ")"
   End If
 End Function
+
+Public Function IntToPesos(n As Double) As String
+  Dim cents As Long
+  cents = (n - Fix(n)) * 100
+  IntToPesos = IntToText(True, Fix(n)) & IIf(n = 1, " peso con ", " pesos con ") & IntToText(True, cents) & IIf(cents = 1, " centavo", " centavos")
+End Function
