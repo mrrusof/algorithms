@@ -38,8 +38,8 @@ let t =
 let rec path a b g =
   List.mem (a,b) g ||
   List.mem (b,a) g ||
-  List.exists (fun (x, y) -> x=a && path y b (List.filter ((<>) (a, y)) g) ||
-                             y=a && path x b (List.filter ((<>) (x, a)) g)   ) g
+  List.exists (fun (x, y) -> x=a && path y b (List.filter ((<>) (x, y)) g) ||
+                             y=a && path x b (List.filter ((<>) (x, y)) g)   ) g
 let vertices g =
   let rec vs = function
     | (x,y) :: g -> IntSet.add y (IntSet.add x (vs g))
