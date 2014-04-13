@@ -1,21 +1,3 @@
-let concat = function
-  | "", s2 -> s2
-  | s1, "" -> s1
-  | s1, s2 -> s1 ^ " " ^ s2
-    
-let units un = function
-  | 0 -> ""
-  | 1 -> if un then "un" else "uno"
-  | 2 -> "dos"
-  | 3 -> "tres"
-  | 4 -> "cuatro"
-  | 5 -> "cinco"
-  | 6 -> "seis"
-  | 7 -> "siete"
-  | 8 -> "ocho"
-  | 9 -> "nueve"
-  | u -> Printf.sprintf "ERROR: units %d" u
-    
 let tens = function
   | 3 -> "treinta"
   | 4 -> "cuarenta"
@@ -39,55 +21,57 @@ let hundreds = function
   | 9 -> "novecientos"
   | c -> Printf.sprintf "ERROR: hundreds %d" c
 
-let upto29ToText un n =
-  if n < 10 then units un n
-  else match n with
-    | 10 -> "diez"
-    | 11 -> "once"
-    | 12 -> "doce"
-    | 13 -> "trece"
-    | 14 -> "catorce"
-    | 15 -> "quince"
-    | 16 -> "dieciséis"
-    | 17 -> "diecisiete"
-    | 18 -> "dieciocho"
-    | 19 -> "diecinueve"
-    | 20 -> "veinte"
-    | 21 -> "veintiuno"
-    | 22 -> "veintidós"
-    | 23 -> "veintitrés"
-    | 24 -> "veinticuatro"
-    | 25 -> "veinticinco"
-    | 26 -> "veintiséis"
-    | 27 -> "veintisiete"
-    | 28 -> "veintiocho"
-    | 29 -> "veintinueve"
-    | _ -> Printf.sprintf "ERROR: upto29ToText %d" n
+let upto29ToText adjective = function
+  | 0 -> ""
+  | 1 -> if adjective then "un" else "uno"
+  | 2 -> "dos"
+  | 3 -> "tres"
+  | 4 -> "cuatro"
+  | 5 -> "cinco"
+  | 6 -> "seis"
+  | 7 -> "siete"
+  | 8 -> "ocho"
+  | 9 -> "nueve"
+  | 10 -> "diez"
+  | 11 -> "once"
+  | 12 -> "doce"
+  | 13 -> "trece"
+  | 14 -> "catorce"
+  | 15 -> "quince"
+  | 16 -> "dieciséis"
+  | 17 -> "diecisiete"
+  | 18 -> "dieciocho"
+  | 19 -> "diecinueve"
+  | 20 -> "veinte"
+  | 21 -> "veintiuno"
+  | 22 -> "veintidós"
+  | 23 -> "veintitrés"
+  | 24 -> "veinticuatro"
+  | 25 -> "veinticinco"
+  | 26 -> "veintiséis"
+  | 27 -> "veintisiete"
+  | 28 -> "veintiocho"
+  | 29 -> "veintinueve"
+  | n -> Printf.sprintf "ERROR: upto29ToText %b %d" adjective n
 
-let upto99ToText un n =
-  if n < 30 then upto29ToText un n
-  else tens (n / 10) ^ if n mod 10 > 0 then " y " ^ units un (n mod 10) else ""
-    
-let upto999ToText un n =
-  if n = 100 then "cien"
-  else concat (hundreds (n / 100), upto99ToText un (n mod 100))
-
-let upto999999ToText n =
-  match upto999ToText true (n / 1000) with
-    | "" -> upto999ToText false (n mod 1000)
-    | "un" -> concat ("mil", upto999ToText false (n mod 1000))
-    | t -> concat (t ^ " mil", upto999ToText false (n mod 1000))
-
-let upto999999999ToText n =
-  match upto999ToText true (n / 1000000) with
-    | "" -> upto999999ToText (n mod 1000000)
-    | "un" -> concat ("un millón", upto999999ToText (n mod 1000000))
-    | t -> concat (t ^ " millones", upto999999ToText (n mod 1000000))
-      
-let intToText n =
+let rec intToText adjective n =
   if n = 0 then "cero"
-  else if n < 1000000000 then upto999999999ToText n
-  else Printf.sprintf "ERROR: intToText %d" n
+  else if n < 30 then upto29ToText adjective n
+  else if n < 100 then
+    tens (n / 10)
+    ^ if n mod 10 > 0 then " y " ^ intToText adjective (n mod 10) else ""
+  else if n = 100 then "cien"
+  else if n < 1000 then
+    hundreds (n / 100)
+    ^ if n mod 100 > 0 then " " ^ intToText adjective (n mod 100) else ""
+  else if n < 1000000 then
+    (if n / 1000 = 1 then "mil" else intToText true (n / 1000) ^ " mil")
+    ^ if n mod 1000 > 0 then " " ^ intToText adjective (n mod 1000) else ""
+  else if n < 1000000000 then
+    (if n / 1000000 = 1 then "un millón"
+     else intToText true (n / 1000000) ^ " millones")
+    ^ if n mod 1000000>0 then " " ^ intToText adjective (n mod 1000000) else ""
+  else Printf.sprintf "ERROR: intToText %b %d" adjective n
 
 let tests = [(0, "cero");
              (1, "uno");
@@ -266,7 +250,7 @@ let tests = [(0, "cero");
 let test () =
   List.iter
     (fun (n, s) ->
-      let r = intToText n in
+      let r = intToText false n in
       if r <> s then Printf.printf "FAILED: %d -> %s\n" n r)
     tests
 
