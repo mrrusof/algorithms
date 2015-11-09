@@ -113,6 +113,7 @@ Q -> 2 more pairs
 using namespace std;
   
 int solution(const vector<int> &A) {
+  if (A.size() < 2) return 0;
   int pairs = 0;
   int condition = 0; /* 0 -> Neither P nor Q, 1 -> \exists C : P(C), 2 -> \exists C : Q(C)  */
   for(int i = 1; i < A.size(); i++) {
@@ -122,7 +123,7 @@ int solution(const vector<int> &A) {
       else if (i+1 < A.size() && A[i] != A[i+1]) condition = 2;
     }
   }
-  if (condition == 0) return pairs;
+  if (condition == 0) return pairs - 1;
   else if (condition == 1) return pairs;
   else if (condition == 2) return pairs+2;
 }
