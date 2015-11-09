@@ -122,7 +122,7 @@ int solution(const vector<int> &A) {
       else if (i+1 < A.size() && A[i] != A[i+1]) condition = 2;
     }
   }
-  if (condition == 0) return pairs - 1;
+  if (condition == 0) return pairs;
   else if (condition == 1) return pairs;
   else if (condition == 2) return pairs+2;
 }
