@@ -236,8 +236,5 @@ int main() {
   vector<int> E(&vE[0], &vE[0]+8);
   print_vector(E);
   cout << "Maximum possible adjacency is " << solution(E) << ".\n";
-
-
-
   return 0;
 }
