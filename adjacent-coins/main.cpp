@@ -77,8 +77,7 @@ using namespace std;
 Given a sequence of coins, the adjacency of the sequence either
 changes or remains the same when we flip a coin because we either
 gain pairs, lose pairs, or keep the same amount of pairs.  Consider
-the following sequence and the delta adjacency when we flip each
-coin.
+the following sequence and the delta adjacency for each coin.
 ```
 Index  | Coin | Delta adjacency
 -------------------------------
@@ -93,7 +92,7 @@ Index  | Coin | Delta adjacency
 ```
 The adjacency for the sequence is 3.  If we flip the first or last
 coin, we lose one pair and the adjacency becomes 2.  If we flip
-coin 2 or 3, we gained two pairs and the adjacency becomes 5.
+coin 2 or 3, we gain two pairs and the adjacency becomes 5.
 Flipping one of the other coins destroys a pair and creates another
 pair, so the adjacency does not change if we flip any of them.
 
@@ -202,7 +201,7 @@ int solution(const vector<int> &A) {
 
 /*
 
-We illustrate usage of `solution` in the following program.
+We illustrate usage of `solution` with the following program.
 
  */
 
@@ -215,26 +214,22 @@ void print_vector(const vector<int> &A) {
   cout << "\n";
 }
 
-int main() {
-  int vA[] = {0};
-  vector<int> A(&vA[0], &vA[0]+1);
+void solve_vector(const int vA[], const int N) {
+  vector<int> A(&vA[0], &vA[0]+N);
   print_vector(A);
   cout << "Maximum possible adjacency is " << solution(A) << ".\n";
+}
+
+int main() {
+  int vA[] = {0};
+  solve_vector(vA, 1);
   int vB[] = {0, 0};
-  vector<int> B(&vB[0], &vB[0]+2);
-  print_vector(B);
-  cout << "Maximum possible adjacency is " << solution(B) << ".\n";
+  solve_vector(vB, 2);
   int vC[] = {0, 1};
-  vector<int> C(&vC[0], &vC[0]+2);
-  print_vector(C);
-  cout << "Maximum possible adjacency is " << solution(C) << ".\n";
+  solve_vector(vC, 2);
   int vD[] = {0, 1, 0, 1, 0, 0, 1, 0};
-  vector<int> D(&vD[0], &vD[0]+8);
-  print_vector(D);
-  cout << "Maximum possible adjacency is " << solution(D) << ".\n";
+  solve_vector(vD, 8);
   int vE[] = {1, 1, 0, 1, 0, 0, 1, 1};
-  vector<int> E(&vE[0], &vE[0]+8);
-  print_vector(E);
-  cout << "Maximum possible adjacency is " << solution(E) << ".\n";
+  solve_vector(vE, 8);
   return 0;
 }
