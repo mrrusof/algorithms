@@ -30,9 +30,17 @@ void solve(const int r, const int s) {
   struct segment* next;
   struct segment* max;
 
+#ifdef DEBUG
+  printf("\n########################\n");
+  printf("Route %d of length %d is the following\n", r, len);
+#endif
+
   /* Ignore negative prefix. */
   while(i<len) {
     scanf("%d", &n);
+#ifdef DEBUG
+    printf(">%d\n", n);
+#endif
     if(n > 0) break;
     i++;
   }
@@ -53,6 +61,9 @@ void solve(const int r, const int s) {
   i++;
   while(i<len) {
     scanf("%d", &n);
+#ifdef DEBUG
+    printf("%d\n", n);
+#endif
     if((curr->value > 0 && n > 0) || (curr->value < 0 && n < 0)) {
       curr->value += n;
       curr->j++;
@@ -78,7 +89,7 @@ void solve(const int r, const int s) {
 
 #ifdef DEBUG
   /* Print preprocessed route. */
-  printf("Preprocessed route\n");
+  printf("\nPreprocessed route\n");
   print_route(first);
 #endif
 
@@ -96,16 +107,17 @@ void solve(const int r, const int s) {
 #endif
 
       /* Join previous and next. */
-      curr = curr->prev;
+      prev = curr->prev;
       next = curr->next;
 
-      curr->value += next->value + next->next->value;
-      curr->j = next->next->j;
-      curr->next = next->next->next;
-      if(curr->next != NULL) curr->next->prev = curr;
+      prev->value += curr->value + next->value;
+      prev->j = next->j;
+      prev->next = next->next;
+      if(prev->next != NULL) prev->next->prev = prev;
 
-      free(next->next);
+      free(curr);
       free(next);
+      curr = prev;
 
 #ifdef DEBUG
       printf("New segment\n");
