@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/* #define DEBUG 0 */
+#define DEBUG 0
 
 typedef struct segment {
   int value;
@@ -14,10 +14,14 @@ typedef struct segment {
 void print_route(struct segment* first) {
   struct segment *curr = first;
   while(curr != NULL){
-    printf("%2d (%2d, %2d)\n", curr->value, curr->i, curr->j);
+    printf("%2d (%2d, %2d) ", curr->value, curr->i, curr->j);
+    if(curr->prev != NULL) printf("%d, ", curr->prev->value);
+    else printf("NULL, ");
+    if(curr->next != NULL) printf("%d", curr->next->value);
+    else printf("NULL");
+    printf("\n");
     curr = curr->next;
   }
-  printf("\n");
 }
 
 void solve(const int r, const int s) {
@@ -35,16 +39,6 @@ void solve(const int r, const int s) {
   printf("Route %d of length %d is the following\n", r, len);
 #endif
 
-  /* Ignore negative prefix. */
-  while(i<len) {
-    scanf("%d", &n);
-#ifdef DEBUG
-    printf(">%d\n", n);
-#endif
-    if(n > 0) break;
-    i++;
-  }
-  
   /* Route has no nice parts if we reached the end. */
   if(i == len) {
     printf("Route %d has no nice parts\n", r);
@@ -52,6 +46,10 @@ void solve(const int r, const int s) {
   }
 
   /* Preprocess the route. */
+  scanf("%d", &n);
+#ifdef DEBUG
+    printf("%d\n", n);
+#endif
   first = curr = (segment *)malloc(sizeof(segment));
   curr->value = n;
   curr->i = i + 1;
@@ -80,7 +78,64 @@ void solve(const int r, const int s) {
     i++;
   }
 
+#ifdef DEBUG
+  printf("\nPreprocessed route\n");
+  print_route(first);
+#endif
+
+  /* Squelch zeroes next to positive segments. */
+  curr = first;
+  while(curr != NULL) {
+    if(curr->value >= 0 && curr->next != NULL && curr->next->value >= 0) {
+      next = curr->next;
+      curr->value += next->value;
+      curr->j = next->j;
+      curr->next = next->next;
+      if(curr->next != NULL) curr->next->prev = curr;
+      free(next);
+    } else {
+      curr = curr->next;
+    }
+  }
+
+#ifdef DEBUG
+  printf("\nRoute w/o zeroes next to positive segments\n");
+  print_route(first);
+#endif
+
+  /* Squelch zeroes next to negative segments. */
+  curr = first;
+  while(curr != NULL) {
+    if(curr->value <= 0 && curr->next != NULL && curr->next->value <= 0) {
+      next = curr->next;
+      curr->value += next->value;
+      curr->j = next->j;
+      curr->next = next->next;
+      if(curr->next != NULL) curr->next->prev = curr;
+      free(next);
+    } else {
+      curr = curr->next;
+    }
+  }
+
+#ifdef DEBUG
+  printf("\nRoute w/o zeroes next to negative segments\n");
+  print_route(first);
+#endif
+
+  /* Cut a negative head. */
+  if(first->value < 0) {
+    next = first->next;
+    next->prev = NULL;
+    free(first);
+    first = next;
+  }
+
   /* Cut a negative tail. */
+  curr = first;
+  while(curr->next != NULL) {
+    curr = curr->next;
+  }
   if(curr->value < 0) {
     prev = curr->prev;
     prev->next = NULL;
@@ -88,17 +143,21 @@ void solve(const int r, const int s) {
   }
 
 #ifdef DEBUG
-  /* Print preprocessed route. */
-  printf("\nPreprocessed route\n");
+  printf("\nRoute w/o negative head or tail\n");
   print_route(first);
 #endif
 
   /* Visit each separator. */
   curr = first->next;
   while(curr != NULL) {
+#ifdef DEBUG
+    printf("\nCandidate pivot %d\n", curr->value);
+    printf("curr->prev->value %d\n", curr->prev->value);
+    printf("curr->next->value %d\n", curr->next->value);
+#endif
     if(curr->prev->value >= -curr->value && curr->next->value >= -curr->value) {
 #ifdef DEBUG
-      printf("Found pivot %d\n", curr->value);
+      printf("\nFound pivot %d\n", curr->value);
       printf("curr->value = %d\n", curr->value);
       printf("curr->prev = %d\n", curr->prev->value);
       printf("curr->next = %d\n", curr->next->value);
@@ -162,7 +221,11 @@ void solve(const int r, const int s) {
   }
 
   /* Print result. */
-  printf("The nicest part of route %d is between stops %d and %d\n", r, max->i, max->j);
+  if(first == NULL) {
+    printf("Route %d has no nice parts\n", r);
+  } else {
+    printf("The nicest part of route %d is between stops %d and %d\n", r, max->i, max->j);
+  }
 
   /* Free the route. */
   curr = first;
