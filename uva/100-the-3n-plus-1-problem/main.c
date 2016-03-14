@@ -7,21 +7,22 @@
 
 unsigned int lengths[MAX_INPUT];
 
-int collatz(const unsigned int n) {
-  if(n < MAX_INPUT) {
-    if(lengths[n] > 0)
-      return lengths[n];
+int collatz(unsigned int n) {
+  int len = 0;
+  while(n >= MAX_INPUT) {
     if(n & 1)
-      lengths[n] = collatz(3*n + 1) + 1;
+      n = 3*n + 1;
     else
-      lengths[n] = collatz(n >> 1) + 1;
-    return lengths[n];
-  } else {
-    if(n & 1)
-      return collatz(3*n + 1) + 1;
-    else
-      return collatz(n >> 1) + 1;
+      n = n >> 1;
+    len++;
   }
+  if(lengths[n] > 0)
+    return lengths[n] + len;
+  if(n & 1)
+    lengths[n] = collatz(3*n + 1) + 1;
+  else
+    lengths[n] = collatz(n >> 1) + 1;
+  return lengths[n] + len;
 }
 
 int main() {
