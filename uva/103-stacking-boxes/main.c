@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* #define DEBUG 1 */
+#define DEBUG 1
 
 #define MAX_DIM 10
 #define MAX_DIM_META (MAX_DIM + 1)
@@ -86,6 +86,7 @@ int main() {
   while(Si(n) != EOF) {
     Si(d);
 #if DEBUG
+    printf("problem\n");
     printf("%d %d\n", n, d);
 #endif
     for(i = 0; i < n; i++) {
@@ -135,23 +136,29 @@ int main() {
     }
 
 #ifdef DEBUG
+    int k;
     printf("longest here\n");
     for(i = 0; i < n; i++) {
       if(longest_here[0][i] >= 0) {
 	print_box(box[longest_here[0][i]], d);
       } else {
-	printf("(XXX) XXX XXX XXX");
+	printf("(XXX) XXX");
+	for(k = 1; k < d; k++)
+	  printf(" XXX");
       }
       for(j = 1; j < n; j++) {
 	printf("\t");
 	if(longest_here[j][i] >= 0) {
 	  print_box(box[longest_here[j][i]], d);
 	} else {
-	  printf("(XXX) XXX XXX XXX");
+	printf("(XXX) XXX");
+	for(k = 1; k < d; k++)
+	  printf(" XXX");
 	}
       }
       printf("\n");
     }
+    printf("solution\n");
 #endif
 
     max_len = longest_here_len[0];
