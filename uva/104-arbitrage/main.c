@@ -2,7 +2,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define Si(n) scanf("%d", &n)
 #define Sf(n) scanf("%f", &n)
@@ -10,23 +10,27 @@
 #define MAX_DIM 20
 #define MIN_PROFIT 1.01
 
-int find_shortest(float edge[MAX_DIM][MAX_DIM],
-		  int node_count,
-		  int visited[MAX_DIM],
-		  int start,
-		  int curr,
+float edge[MAX_DIM][MAX_DIM];
+int visited[MAX_DIM];
+int node_count, first;
+float outgoing_overestimated_profit[MAX_DIM];
+float incoming_overestimated_profit[MAX_DIM];
+
+int find_shortest(int curr,
 		  float rate,
+		  float untraversed_profit_rates,
 		  int prefix_len,
 		  int **suffix) {
 
   int i;
-  int prefix_len_incr = prefix_len + 1;
+  int next;
+  int next_prefix_len = prefix_len + 1;
   int candidate_len;
   int **candidate_suffix;
   int shortest_len;
 
 #if DEBUG
-  printf("start, curr, rate, prefix_len = %d, %d, %f, %d\n", start, curr, rate, prefix_len);
+  printf("first, curr, rate, u_p_r, prefix_len = %d, %d, %f, %f, %d\n", first, curr, rate, untraversed_profit_rates, prefix_len);
   printf("already visited\n");
   for(i = 0; i < node_count; i++)
     printf("%2d | ", i);
@@ -36,40 +40,41 @@ int find_shortest(float edge[MAX_DIM][MAX_DIM],
   printf("\n");
 #endif
 
-  if(rate * edge[curr][start] >= MIN_PROFIT) {
+  if(rate * edge[curr][first] >= MIN_PROFIT) {
 #if DEBUG
-    printf("found candidate with length %d and rate %f\n", prefix_len_incr, rate * edge[curr][start]);
+    printf("found candidate with length %d and rate %f\n", next_prefix_len, rate * edge[curr][first]);
 #endif
-    *suffix = (int *) malloc(prefix_len_incr * sizeof(int));
-    (*suffix)[prefix_len] = start;
-    return prefix_len_incr;
+    *suffix = (int *) malloc(next_prefix_len * sizeof(int));
+    (*suffix)[prefix_len] = first;
+    return next_prefix_len;
   }
 
   *suffix = NULL;
   candidate_suffix = (int **) malloc(sizeof(int **));
   shortest_len = INT_MAX;
 
-  for(i = 0; i < node_count; i++) {
-    if(i != curr && !visited[i]) {
+  for(next = 0; next < node_count; next++) {
+    if(next == curr || visited[next]) continue;
+    float forfeited_profit = outgoing_overestimated_profit[curr] * incoming_overestimated_profit[next];
+    float rate_for_next = rate * edge[curr][next];
+    float untraversed_profit_rates_for_next = untraversed_profit_rates / forfeited_profit;
+    float overestimated_profit = rate_for_next * untraversed_profit_rates_for_next;
+    if(overestimated_profit < MIN_PROFIT) continue;
 #if DEBUG
-      printf("from, visit = %d, %d\n", curr, i);
+    printf("from, visit = %d, %d\n", curr, next);
 #endif
-      visited[i] = 1;
-      candidate_len = find_shortest(edge,
-				    node_count,
-				    visited,
-				    start,
-				    i,
-				    rate * edge[curr][i],
-				    prefix_len_incr,
-				    candidate_suffix);
-      visited[i] = 0;
-      if(candidate_len < shortest_len) {
-  	shortest_len = candidate_len;
-	free(*suffix);
-	*suffix = *candidate_suffix;
-	(*suffix)[prefix_len] = i;
-      }
+    visited[next] = 1;
+    candidate_len = find_shortest(next,
+				  rate_for_next,
+				  untraversed_profit_rates_for_next,
+				  next_prefix_len,
+				  candidate_suffix);
+    visited[next] = 0;
+    if(candidate_len < shortest_len) {
+      shortest_len = candidate_len;
+      free(*suffix);
+      *suffix = *candidate_suffix;
+      (*suffix)[prefix_len] = next;
     }
   }
 
@@ -89,13 +94,11 @@ void print_edges(float edge[MAX_DIM][MAX_DIM], int n) {
 
 int main() {
 
-  int node_count;
   int i, j;
-  float edge[MAX_DIM][MAX_DIM];
-  int profitable_count;
   int profitable[MAX_DIM][2];
-  int visited[MAX_DIM];
-  int first, second;
+  int profitable_count;
+  float untraversed_profit_rates;
+  int second;
   int candidate_len;
   int **candidate = (int **) malloc(sizeof(int **));
   int shortest_len;
@@ -103,10 +106,17 @@ int main() {
 
   while(Si(node_count) != EOF) {
 
+    /* Set initial state for given input. */
     profitable_count = 0;
+    untraversed_profit_rates = 1.0;
     shortest_len = INT_MAX;
+    for(i = 0; i < node_count; i++) {
+      outgoing_overestimated_profit[i] = 1;
+      incoming_overestimated_profit[i] = 1;
+    }
+      
 
-    /* Read edges and collect profitable. */
+    /* Read edges, collect profitable, and overestimate outgoing/incoming profit. */
     for(i = 0; i < node_count; i++)
       for(j = 0; j < node_count; j++)
 	if(i == j)
@@ -117,8 +127,17 @@ int main() {
 	    profitable[profitable_count][0] = i;
 	    profitable[profitable_count][1] = j;
 	    profitable_count++;
+	    if(outgoing_overestimated_profit[i] < edge[i][j])
+	      outgoing_overestimated_profit[i] = edge[i][j];
+	    if(incoming_overestimated_profit[j] < edge[i][j])
+	      incoming_overestimated_profit[j] = edge[i][j];
 	  }
 	}
+
+    for(i = 0; i < node_count; i++) {
+      untraversed_profit_rates *= outgoing_overestimated_profit[i];
+      untraversed_profit_rates *= incoming_overestimated_profit[i];
+    }
 
 #if DEBUG
     /* Print edges. */
@@ -128,6 +147,16 @@ int main() {
     /* Print profitable edges. */
     for(i = 0; i < profitable_count; i++)
       printf("%d -- %f --> %d\n", profitable[i][0], edge[profitable[i][0]][profitable[i][1]], profitable[i][1]);
+
+    /* Print overestimated profits. */
+    for(i = 0; i < node_count; i++) {
+      if(outgoing_overestimated_profit[i] > 1)
+	printf("%d-- %f -->\n", i, outgoing_overestimated_profit[i]);
+    }
+    for(i = 0; i < node_count; i++) {
+      if(incoming_overestimated_profit[i] > 1)
+	printf("-- %f --> %d\n", incoming_overestimated_profit[i], i);
+    }
 #endif
 
     /* Find shortest profitable sequence. */
@@ -138,12 +167,11 @@ int main() {
       second = profitable[i][1];
       visited[first] = 1;
       visited[second] = 1;
-      candidate_len = find_shortest(edge,
-				    node_count,
-				    visited,
-				    first,
-				    second,
+      float forfeited_profit = outgoing_overestimated_profit[first] * incoming_overestimated_profit[second];
+      float untraversed_profit_rates_for_second = untraversed_profit_rates / forfeited_profit;
+      candidate_len = find_shortest(second,
 				    edge[first][second],
+				    untraversed_profit_rates_for_second,
 				    2,
 				    candidate);
       if(candidate_len < shortest_len) {
