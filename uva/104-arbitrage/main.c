@@ -2,7 +2,7 @@
 #include <limits.h>
 
 #define DEBUG 0
-#define FRESH -2
+#define FRESH -1
 #define NOTHING 0
 
 #define Si(n) scanf("%d", &n)
@@ -22,7 +22,7 @@ void f(int a, int b, int l) {
   float rate;
   if(paths[a][b][l] != FRESH) return;
   if(l == 1) {
-    if(a == b) {
+    if(edge[a][b] == NOTHING) {
       paths[a][b][l] = NOTHING;
       rates[a][b][l] = NOTHING;
     } else {
@@ -34,8 +34,8 @@ void f(int a, int b, int l) {
   rates[a][b][l] = NOTHING;
   paths[a][b][l] = NOTHING;
   for(i = 0; i < node_count; i++) {
-    f(i, b, l - 1);
     if(a == i) continue;
+    f(i, b, l - 1);
     rate = edge[a][i] * rates[i][b][l - 1];
     if(rates[a][b][l] < rate) {
       rates[a][b][l] = rate;
@@ -77,7 +77,7 @@ int main() {
     /* Reset paths and rates. */
     for(i = 0; i < node_count; i++)
       for(j = 0; j < node_count; j++)
-	for(k = 0; k < node_count; k++) {
+	for(k = 0; k <= node_count; k++) {
 	  paths[i][j][k] = FRESH;
 	  rates[i][j][k] = FRESH;
 	}
@@ -86,13 +86,13 @@ int main() {
     int stop = 0;
     for(i = 2; i <= node_count && stop == 0; i++) {
       for(j = 0; j < node_count && stop == 0; j++) {
-#if DEBUG
-	printf("stop = %d\n", stop);
-	printf("f(%d, %d, %d)\n", j, j, i);
-#endif
 	f(j, j, i);
 	if(rates[j][j][i] >= MIN_PROFIT)
 	  stop = 1;
+#if DEBUG
+	printf("f(%d, %d, %d)\n", j, j, i);
+	printf("stop = %d\n", stop);
+#endif
       }
     }
 
