@@ -1,8 +1,13 @@
-all:
-	gcc -DONLINE_JUDGE -o main.exe main.c
+all: main.exe main-fixed-mem.exe
 
-run: all
-	./main.exe
+%.exe: %.c
+	gcc -DONLINE_JUDGE -o $@ $<
+
+run: main.exe
+	./main.exe <example.in
+
+run-fixed-mem: main-fixed-mem.exe
+	./main-fixed-mem.exe <example.in
 
 clean:
-	rm -rf main.exe
+	rm -rf *.exe *~
