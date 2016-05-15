@@ -22,7 +22,9 @@ void set_to_zero(int n, float m[V][V]) {
       m[i][j] = 0;
 }
 
-void R(int n, float rate[V][V], float benefit[V+1][V][V], int succ[V+1][V][V]) {
+void R(int n, float rate[V][V]) {
+  float benefit[V+1][V][V];
+  int succ[V+1][V][V];
   int l, i, j, k;
   set_to_zero(n, benefit[0]);
   for(i = 0; i < n; i++)
@@ -54,8 +56,6 @@ int main() {
   int n, i, j;
   float r;
   float rate[V][V];
-  float benefit[V+1][V][V];
-  int succ[V+1][V][V];
   while(Si(n) != EOF) {
     for(i = 0; i < n; i++)
       for(j = 0; j < n; j++) {
@@ -66,7 +66,7 @@ int main() {
 	Sf(r);
 	rate[i][j] = r;
       }
-    R(n, rate, benefit, succ);
+    R(n, rate);
   }
   return 0;
 }
