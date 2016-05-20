@@ -34,19 +34,19 @@ void R(int n, float rate[V][V]) {
     set_to_zero(n, benefit[l]);
     for(i = 0; i < n; i++)
       for(j = i + 1; j < n; j++) {
-	for(k = i; k < n; k++)
-	  if(benefit[l - 1][j][i] < rate[j][k] * benefit[l - 2][k][i]) {
-	    benefit[l - 1][j][i] = rate[j][k] * benefit[l - 2][k][i];
-	    succ[l - 1][j][i] = k;
-	  }
-	if(benefit[l][i][i] < rate[i][j] * benefit[l - 1][j][i]) {
-	  benefit[l][i][i] = rate[i][j] * benefit[l - 1][j][i];
-	  succ[l][i][i] = j;
-	  if(benefit[l][i][i] >= MIN_PROFIT) {
-	    print_path(i, i, l, succ);
-	    return;
-	  }
-	}
+        for(k = i; k < n; k++)
+          if(benefit[l - 1][j][i] < rate[j][k] * benefit[l - 2][k][i]) {
+            benefit[l - 1][j][i] = rate[j][k] * benefit[l - 2][k][i];
+            succ[l - 1][j][i] = k;
+          }
+        if(benefit[l][i][i] < rate[i][j] * benefit[l - 1][j][i]) {
+          benefit[l][i][i] = rate[i][j] * benefit[l - 1][j][i];
+          succ[l][i][i] = j;
+          if(benefit[l][i][i] >= MIN_PROFIT) {
+            print_path(i, i, l, succ);
+            return;
+          }
+        }
       }
   }
   printf("no arbitrage sequence exists\n");
@@ -59,12 +59,12 @@ int main() {
   while(Si(n) != EOF) {
     for(i = 0; i < n; i++)
       for(j = 0; j < n; j++) {
-	if(i == j) {
-	  rate[i][i] = 0;
-	  continue;
-	}
-	Sf(r);
-	rate[i][j] = r;
+        if(i == j) {
+          rate[i][i] = 0;
+          continue;
+        }
+        Sf(r);
+        rate[i][j] = r;
       }
     R(n, rate);
   }

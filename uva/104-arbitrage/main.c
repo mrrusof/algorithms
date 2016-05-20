@@ -30,22 +30,22 @@ void S(int n, float rate[V][V]) {
     for(j = 0; j < n; j++) {
       benefit[1][i][j] = rate[i][j];
       if(rate[i][j] > 0)
-	succ[1][i][j] = j;
+        succ[1][i][j] = j;
     }
   for(l = 2; l <= n; l++) {
     set_to_zero(n, benefit[l]);
     for(i = 0; i < n; i++)
       for(j = 0; j < n; j++)
-	for(k = 0; k < n; k++) {
-	  if(benefit[l][i][j] < rate[i][k] * benefit[l - 1][k][j]) {
-	    benefit[l][i][j] = rate[i][k] * benefit[l - 1][k][j];
-	    succ[l][i][j] = k;
-	    if(benefit[l][i][i] >= MIN_PROFIT) {
-	      print_path(i, i, l, succ);
-	      return;
-	    }
-	  }
-	}
+        for(k = 0; k < n; k++) {
+          if(benefit[l][i][j] < rate[i][k] * benefit[l - 1][k][j]) {
+            benefit[l][i][j] = rate[i][k] * benefit[l - 1][k][j];
+            succ[l][i][j] = k;
+            if(benefit[l][i][i] >= MIN_PROFIT) {
+              print_path(i, i, l, succ);
+              return;
+            }
+          }
+        }
   }
   printf("no arbitrage sequence exists\n");
 }
@@ -57,12 +57,12 @@ int main() {
   while(Si(n) != EOF) {
     for(i = 0; i < n; i++)
       for(j = 0; j < n; j++) {
-	if(i == j) {
-	  rate[i][i] = 0;
-	  continue;
-	}
-	Sf(r);
-	rate[i][j] = r;
+        if(i == j) {
+          rate[i][i] = 0;
+          continue;
+        }
+        Sf(r);
+        rate[i][j] = r;
       }
     S(n, rate);
   }
