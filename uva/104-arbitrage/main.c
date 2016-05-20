@@ -27,8 +27,11 @@ void S(int n, float rate[V][V]) {
   int succ[V][V][V];
   int l, i, j, k;
   for(i = 0; i < n; i++)
-    for(j = 0; j < n; j++)
+    for(j = 0; j < n; j++) {
       benefit[1][i][j] = rate[i][j];
+      if(rate[i][j] > 0)
+	succ[1][i][j] = j;
+    }
   for(l = 2; l <= n; l++) {
     set_to_zero(n, benefit[l]);
     for(i = 0; i < n; i++)
@@ -36,8 +39,8 @@ void S(int n, float rate[V][V]) {
 	for(k = 0; k < n; k++) {
 	  if(benefit[l][i][j] < rate[i][k] * benefit[l - 1][k][j]) {
 	    benefit[l][i][j] = rate[i][k] * benefit[l - 1][k][j];
-	    succ[l][j][i] = k;
-	    if(i == j && benefit[l][i][j] >= MIN_PROFIT) {
+	    succ[l][i][j] = k;
+	    if(benefit[l][i][i] >= MIN_PROFIT) {
 	      print_path(i, i, l, succ);
 	      return;
 	    }
