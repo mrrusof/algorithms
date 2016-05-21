@@ -23,4 +23,4 @@ let rec upto m n f =
   else begin f m; upto (m + 1) n f end
 
 let _ =
-  upto 3 16 (fun n -> Printf.printf "K%2d %40d\n" n (c n))
+  upto 2 16 (fun n -> Printf.printf "K%2d %40d\n" n (c n))
