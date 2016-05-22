@@ -36,5 +36,8 @@ let rec format_number s =
 
 let (>>) x f = f x
 
-let _ =
-  upto 2 20 (fun n -> Printf.printf "K%2d %40s\n" n (c n >> string_of_big_int >> format_number))
+let count n =
+  let count = c n >> string_of_big_int >> format_number in
+  Printf.printf "K%2d %40s\n" n count
+
+let _ = upto 2 20 count
