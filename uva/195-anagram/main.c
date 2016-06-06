@@ -6,24 +6,49 @@
 
 #define Si(i) scanf("%d", &i)
 #define Ss(s) scanf("%s", s)
-#define UPCASE(c, u) if(c >= 'a') u = c - ('a' - 'A'); else u = c;
+#define UPCASE(c, u) if(c <= 'a') u = c - ('a' - 'A'); else u = c;
 
 typedef struct letter {
   char letter;
   struct letter *next;
 } letter;
 
-char t[MAX_LEN];
+char p[MAX_LEN];
+
+letter *create_linked_list(char *s, int s_len) {
+  int i;
+  letter *first;
+  letter *prev;
+  letter *curr;
+  first = (letter *)malloc(sizeof(letter));
+  first->letter = s[0];
+  first->next = NULL;
+  prev = first;
+  for(i = 1; i < s_len; i++) {
+    curr = (letter *)malloc(sizeof(letter));
+    curr->letter = s[i];
+    curr->next = NULL;
+    prev->next = curr;
+    prev = curr;
+  }
+  return first;
+}
+
+void destroy_linked_list(letter *curr) {
+  letter *prev;
+  while(curr != NULL) {
+    prev = curr;
+    free(prev);
+    curr = curr->next;
+  }
+}
 
 int le_char(char a, char b) {
   char A, B;
   UPCASE(a, A);
   UPCASE(b, B);
-  if(A < B) return 1;
-  if(A == B)
-    if(a < b)
-      return 1;
-  return 0;
+  if(A == B) return a <= b;
+  return A <= B;
 }
 
 void mergesort_chars(char *a, int n) {
@@ -35,15 +60,15 @@ void mergesort_chars(char *a, int n) {
   for(i = k = 0, j = m; k < n; k++)
     if(i < m && j < n)
       if(le_char(a[i], a[j]))
-	t[k] = a[i++];
+	p[k] = a[i++];
       else
-	t[k] = a[j++];
+	p[k] = a[j++];
     else if(i < m)
-      t[k] = a[i++];
+      p[k] = a[i++];
     else
-      t[k] = a[j++];
+      p[k] = a[j++];
   for(k = 0; k < n; k++)
-    a[k] = t[k];
+    a[k] = p[k];
 }
 
 void print_anagrams(letter *first, int l) {
@@ -51,18 +76,17 @@ void print_anagrams(letter *first, int l) {
   letter *curr;
   int i;
   if(first == NULL) {
-    for(i = 0; i < l; i++)
-      printf("%c", t[i]);
-    printf("\n");
+    p[l] = '\0';
+    printf("%s\n", p);
     return;
   }
-  t[l] = first->letter;
+  p[l] = first->letter;
   print_anagrams(first->next, l+1);
   prev = first;
   curr = first->next;
   while(curr != NULL) {
     if(prev->letter != curr->letter) {
-      t[l] = curr->letter;
+      p[l] = curr->letter;
       prev->next = curr->next;
       print_anagrams(first, l+1);
       prev->next = curr;
@@ -73,48 +97,17 @@ void print_anagrams(letter *first, int l) {
 }
 
 int main() {
-  int n, i, s_len;
+  int n, s_len;
   char s[MAX_LEN];
   letter *first;
-  letter *prev;
-  letter *curr;
   Si(n);
   while(n-- > 0) {
     Ss(s);
-    for(s_len = 0; s[s_len] != 0; s_len++);
+    for(s_len = 0; s[s_len] != '\0'; s_len++);
     mergesort_chars(s, s_len);
-#if DEBUG
-    printf("original %s\n", s);
-    printf("length %d\n", s_len);
-    printf("sorted %s\n", s);
-#endif
-    first = (letter *)malloc(sizeof(letter));
-    first->letter = s[0];
-    first->next = NULL;
-    prev = first;
-    for(i = 1; i < s_len; i++) {
-      curr = (letter *)malloc(sizeof(letter));
-      curr->letter = s[i];
-      curr->next = NULL;
-      prev->next = curr;
-      prev = curr;
-    }
-#if DEBUG
-    printf("struct ");
-    curr = first;
-    while(curr != NULL) {
-      printf("%c", curr->letter);
-      curr = curr->next;
-    }
-    printf("\n");
-#endif
+    first = create_linked_list(s, s_len);
     print_anagrams(first, 0);
-    curr = first;
-    while(curr != NULL) {
-      prev = curr;
-      free(prev);
-      curr = curr->next;
-    }
+    destroy_linked_list(first);
   }
   return 0;
 }
