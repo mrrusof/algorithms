@@ -8,7 +8,7 @@ int count;
 
 void print_swap(int i, int n) {
   int j;
-  printf("%05d ", count++);
+  printf("%5d ", count++);
   for(j = 0; j < n - 1; j++)
     if(i == j)
       printf("|--");
@@ -52,16 +52,16 @@ void jt(char *s, int n, int l, int *p, int *o) {
 
 void johnson_trotter(char *s, int len) {
   int i, p[len], o[1];
-  if(len < 2)
-    printf("The only permutation is %s", s);
-  else {
-    count = 1;
-    print_swap(-1, len);
-    printf(" %s\n", s);
-    for(i = 0; i < len; i++)
-      p[i] = 1;
-    jt(s, len, 2, p, o);
+  if(len < 2) {
+    printf("The only permutation is %s\n", s);
+    return;
   }
+  count = 1;
+  print_swap(-1, len);
+  printf(" %s\n", s);
+  for(i = 0; i < len; i++)
+    p[i] = 1;
+  jt(s, len, 2, p, o);
 }
 
 int main() {
