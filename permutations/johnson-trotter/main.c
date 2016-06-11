@@ -28,13 +28,15 @@ void jt(char *s, int n, int l, int *p, int *o);
 void step(char *s, int n, int l, int *p, int *o,int i) {
   if(l < n)
     jt(s, n, l + 1, p, o);
-  swap_w_next(s, o[l - 1] + i);
-  print_swap(o[l - 1] + i, n);
-  printf(" %s\tL = %5d\ta = %5d\tb = %5d\n", s, l, o[l - 1] + i, o[l - 1] + i + 1);
+  swap_w_next(s, o[0] + i);
+  print_swap(o[0] + i, n);
+  printf(" %s\tL = %5d\ta = %5d\tb = %5d\n", s, l, o[0] + i, o[0] + i + 1);
 }
 
 void jt(char *s, int n, int l, int *p, int *o) {
   int i;
+  if(l == n)
+    o[0] = 0;
   if(p[l - 1])
     for(i = 0; i < l - 1; i++)
       step(s, n, l, p, o, i);
@@ -43,17 +45,13 @@ void jt(char *s, int n, int l, int *p, int *o) {
       step(s, n, l, p, o, i);
   if(l < n)
     jt(s, n, l + 1, p, o);
-  if(l == n)
-    o[n - 1] = 0;
-  if(p[l - 1])
-    o[l - 2] = o[l - 1];
-  else
-    o[l - 2] = o[l - 1] + 1;
+  if(!p[l - 1])
+    o[0]++;
   p[l - 1] = !p[l - 1];
 }
 
 void johnson_trotter(char *s, int len) {
-  int i, p[len], o[len];
+  int i, p[len], o[1];
   if(len < 2)
     printf("The only permutation is %s", s);
   else {
