@@ -60,10 +60,8 @@ void johnson_trotter(char *s, int len) {
     count = 1;
     print_swap(-1, len);
     printf(" %s\n", s);
-    for(i = 0; i < len; i++) {
+    for(i = 0; i < len; i++)
       p[i] = 1;
-      o[i] = 0;
-    }
     jt(s, len, 2, p, o);
   }
 }
