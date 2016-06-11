@@ -11,9 +11,9 @@ void print_swap(int i, int n) {
   printf("%05d ", count++);
   for(j = 0; j < n - 1; j++)
     if(i == j)
-      printf("|<--->");
+      printf("|--");
     else
-      printf("|     ");
+      printf("|  ");
   printf("|");
 }
 
