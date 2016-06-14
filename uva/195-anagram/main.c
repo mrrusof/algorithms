@@ -6,7 +6,7 @@
 
 #define Si(i) scanf("%d", &i)
 #define Ss(s) scanf("%s", s)
-#define UPCASE(c, u) if(c <= 'a') u = c - ('a' - 'A'); else u = c;
+#define UPCASE(c, u) if(c >= 'a') u = c - ('a' - 'A'); else u = c;
 
 typedef struct letter {
   char letter;
