@@ -1,16 +1,15 @@
 #include <stdio.h>
 
+#define MAX_LEN 30
+
 #define Ss(s) scanf("%s", s)
 
-#define MAX_LEN 1000
-
-int count;
-
+int count = 1;
 void print_swap(int i, int n) {
   int j;
-  printf("%5d ", count++);
+  printf("%4d ", count++);
   for(j = 0; j < n - 1; j++)
-    if(i == j)
+    if(j == i)
       printf("|--");
     else
       printf("|  ");
@@ -23,53 +22,48 @@ void swap_w_next(char *s, int i) {
   s[i + 1] = t;
 }
 
-void jt(char *s, int n, int l, int *p, int *o);
-
-void step(char *s, int n, int l, int *p, int *o,int i) {
-  if(l < n)
-    jt(s, n, l + 1, p, o);
-  swap_w_next(s, o[0] + i);
-  print_swap(o[0] + i, n);
-  printf(" %s\tL = %5d\ta = %5d\tb = %5d\n", s, l, o[0] + i, o[0] + i + 1);
-}
-
-void jt(char *s, int n, int l, int *p, int *o) {
+int jt(char *s, int l, int n, int *d) {
   int i;
-  if(l == n)
-    o[0] = 0;
-  if(p[l - 1])
-    for(i = 0; i < l - 1; i++)
-      step(s, n, l, p, o, i);
-  else
-    for(i = l - 2; 0 <= i; i--)
-      step(s, n, l, p, o, i);
+  int o = 0;
   if(l < n)
-    jt(s, n, l + 1, p, o);
-  if(!p[l - 1])
-    o[0]++;
-  p[l - 1] = !p[l - 1];
+    o = jt(s, l + 1, n, d);
+  if(d[l])
+    for(i = 0; i < l - 1; i++) {
+      swap_w_next(s, o + i);
+      print_swap(o + i, n);
+      printf(" %s L = %2d\n", s, l);
+      if(l < n)
+	o = jt(s, l + 1, n, d);
+    }
+  else {
+    for(i = l - 2; 0 <= i; i--) {
+      swap_w_next(s, o + i);
+      print_swap(o + i, n);
+      printf(" %s L = %2d\n", s, l);
+      if(l < n)
+	o = jt(s, l + 1, n, d);
+    }
+    o++;
+  }
+  d[l] = !d[l];
+  return o;
 }
 
-void johnson_trotter(char *s, int len) {
-  int i, p[len], o[1];
-  if(len < 2) {
-    printf("The only permutation is %s\n", s);
-    return;
-  }
-  count = 1;
-  print_swap(-1, len);
+void johnson_trotter(char *s, int n) {
+  int i;
+  int d[MAX_LEN + 1];
+  for(i = 0; i < MAX_LEN + 1; i++)
+    d[i] = 1;
+  print_swap(-1, n);
   printf(" %s\n", s);
-  for(i = 0; i < len; i++)
-    p[i] = 1;
-  jt(s, len, 2, p, o);
+  jt(s, 2, n, d);
 }
 
 int main() {
-  int len;
   char s[MAX_LEN];
+  int slen;
   Ss(s);
-  for(len = 0; s[len] != '\0'; len++);
-  printf("\n");
-  johnson_trotter(s, len);
+  for(slen = 0; s[slen] != '\0'; slen++);
+  johnson_trotter(s, slen);
   return 0;
 }
