@@ -4,7 +4,7 @@
 
 #define Ss(s) scanf("%s", s)
 
-int count = 1;
+int count = 0;
 void print_swap(int i, int n) {
   int j;
   printf("%4d ", count++);
@@ -53,7 +53,7 @@ void johnson_trotter(char *s, int n) {
   int i;
   int d[MAX_LEN + 1];
   for(i = 0; i < MAX_LEN + 1; i++)
-    d[i] = 1;
+    d[i] = 0;
   print_swap(-1, n);
   printf(" %s\n", s);
   jt(s, 2, n, d);
