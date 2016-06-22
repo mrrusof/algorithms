@@ -30,7 +30,7 @@ void swap_ints(int *s, int i, int j) {
   s[j] = t;
 }
 
-void johnson_trotter(char *s, int n) {
+void johnson_mark_rules(char *s, int n) {
   print_swap(-1, n);
   printf(" %s\n", s);
 
@@ -64,6 +64,6 @@ int main() {
   char s[MAX_LEN];
   Ss(s);
   for(slen = 0; s[slen] != '\0'; slen++);
-  johnson_trotter(s, slen);
+  johnson_mark_rules(s, slen);
   return 0;
 }
