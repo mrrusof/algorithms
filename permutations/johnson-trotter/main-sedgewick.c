@@ -20,7 +20,7 @@ void swap_with_next(char *s, int i) {
   s[i + 1] = t;
 }
 
-void JohnsonTrotterIterative(char *s, int n) {
+void johnson_trotter_iterative(char *s, int n) {
   int i;
   int x;
   int k;
@@ -60,6 +60,6 @@ int main() {
   int slen;
   Ss(s);
   for(slen = 0; s[slen] != '\0'; slen++);
-  JohnsonTrotterIterative(s, slen);
+  johnson_trotter_iterative(s, slen);
   return 0;
 }

@@ -49,7 +49,7 @@ int jt(char *s, int l, int n, int *d) {
   return o;
 }
 
-void johnson_trotter(char *s, int n) {
+void johnson_trotter_recursive(char *s, int n) {
   int i;
   int d[MAX_LEN + 1];
   for(i = 0; i < MAX_LEN + 1; i++)
@@ -64,6 +64,6 @@ int main() {
   int slen;
   Ss(s);
   for(slen = 0; s[slen] != '\0'; slen++);
-  johnson_trotter(s, slen);
+  johnson_trotter_recursive(s, slen);
   return 0;
 }
