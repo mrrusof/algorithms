@@ -55,7 +55,7 @@
       else
         writeln(b,a,c)
   end.
-
+  
   Permutations that correspond to my output.
 
   a b c
@@ -87,33 +87,61 @@ void print_vars(char *vars, int n) {
     printf(",%c", vars[i]);
 }
 
+void align(int n) {
+  int j;
+  for(j = 1; j < n; j++)
+    printf("  ");
+}
+
 void writeln(char *vars, int n) {
-  printf("    writeln(");
+  align(n + 1);
+  printf("writeln(");
   print_vars(vars, n);
   printf(")\n");
+}
+
+void ifthen(char * vars, int i, int n) {
+  align(n);
+  printf("if %c < %c then\n", vars[i], vars[i + 1]);
+}
+
+void elseifthen(char * vars, int i, int n) {
+  align(n);
+  printf("else if %c < %c then\n", vars[i], vars[i + 1]);
 }
 
 int jt(char *vars, int l, int n) {
   int i;
   int o = 0;
-  if(l < n)
-    o = jt(vars, l + 1, n);
   if(D[l]) {
     for(i = l - 1; 0 < i; i--) {
-      swap_with_next(vars, o + i - 1);
-      writeln(vars, n);
+      if(i == l - 1)
+	ifthen(vars, l - 2, l);
+      else
+	elseifthen(vars, o + i - 1, l);
       if(l < n)
 	o = jt(vars, l + 1, n);
+      writeln(vars, n);
+      swap_with_next(vars, o + i - 1);
     }
-    o++;
+    o = 1;
   } else {
     for(i = 0; i < l - 1; i++) {
-      swap_with_next(vars, o + i);
-      writeln(vars, n);
+      if(i == 0)
+	ifthen(vars, 0, l);
+      else
+	elseifthen(vars, o + i, l);
       if(l < n)
 	o = jt(vars, l + 1, n);
+      writeln(vars, n);
+      swap_with_next(vars, o + i);
     }
+    o = 0;
   }
+  align(l);
+  printf("else\n");
+  if(l < n)
+    o = jt(vars, l + 1, n) + o;
   D[l] = !D[l];
   return o;
 }
@@ -126,8 +154,8 @@ void johnson_trotter(char *_vars, int n) {
   for(i = 0; i < n; i++)
     vars[i] = _vars[i];
   vars[n] = '\0';
-  writeln(vars, n);
   jt(vars, 2, n);
+  writeln(vars, n);
 }
 
 int main() {
