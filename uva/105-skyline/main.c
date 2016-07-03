@@ -1,6 +1,9 @@
 #include <stdio.h>
 
 /*
+Solution is a sequence of changes in height such that
+1. A given height is the height of the tallest building for the corresponding interval.
+
   \empty
   (1, 11, 5)
   -----------
