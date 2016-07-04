@@ -72,7 +72,8 @@
 #define Si(n) scanf("%d", &n)
 #define MAX 8
 
-int D[MAX];
+int D[MAX + 1];
+int O[MAX + 1];
 
 void swap_with_next(char *s, int i) {
   char t = s[i];
@@ -110,51 +111,52 @@ void elseifthen(char * vars, int i, int n) {
   printf("else if %c < %c then\n", vars[i], vars[i + 1]);
 }
 
-int jt(char *vars, int l, int n) {
+void jt(char *vars, int l, int n) {
   int i;
-  int o = 0;
   if(D[l]) {
     for(i = l - 1; 0 < i; i--) {
       if(i == l - 1)
-	ifthen(vars, l - 2, l);
+	ifthen(vars, O[l] + l - 2, l);
       else
-	elseifthen(vars, o + i - 1, l);
+	elseifthen(vars, O[l] + i - 1, l);
       if(l < n)
-	o = jt(vars, l + 1, n);
+	jt(vars, l + 1, n);
       writeln(vars, n);
-      swap_with_next(vars, o + i - 1);
+      swap_with_next(vars, O[l] + i - 1);
     }
-    o = 1;
+    O[l - 1] = 1;
   } else {
     for(i = 0; i < l - 1; i++) {
       if(i == 0)
-	ifthen(vars, 0, l);
+	ifthen(vars, O[l], l);
       else
-	elseifthen(vars, o + i, l);
+	elseifthen(vars, O[l] + i, l);
       if(l < n)
-	o = jt(vars, l + 1, n);
+	jt(vars, l + 1, n);
       writeln(vars, n);
-      swap_with_next(vars, o + i);
+      swap_with_next(vars, O[l] + i);
     }
-    o = 0;
+    O[l - 1] = 0;
   }
   align(l);
   printf("else\n");
   if(l < n)
-    o = jt(vars, l + 1, n) + o;
+    jt(vars, l + 1, n);
   D[l] = !D[l];
-  return o;
+  O[l - 1] = O[l] + O[l - 1];
 }
 
 void johnson_trotter(char *_vars, int n) {
   int i;
   char vars[MAX + 1];
-  for(i = 0; i < MAX; i++)
+  for(i = 0; i <= n; i++) {
     D[i] = 1;
+    O[i] = 0;
+  }
   for(i = 0; i < n; i++)
     vars[i] = _vars[i];
   vars[n] = '\0';
-  jt(vars, 2, n);
+  if(n > 1) jt(vars, 2, n);
   writeln(vars, n);
 }
 
@@ -162,7 +164,7 @@ int main() {
   char * vars = "abcdefgh";
   int m;
   int n;
-  int i;
+  int mm;
   Si(m);
   while(m-- > 0) {
     Si(n);
@@ -173,6 +175,7 @@ int main() {
     printf(");\n");
     johnson_trotter(vars, n);
     printf("end.\n");
+    if(m > 0) printf("\n");
   }
   return 0;
 }
