@@ -115,7 +115,6 @@ int main() {
   int n;
   int x, y, z;
   int l, u;
-  int 
   while(Si(n) != EOF) {
     for(z = 2; z <= n; z++) {
       for(y = z - 1; z*z - y*y <= y*y; y--) {
