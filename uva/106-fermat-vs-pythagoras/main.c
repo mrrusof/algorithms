@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 #define Si(i) scanf("%d", &i)
 
@@ -111,44 +112,52 @@
 
 #define MAX 1000000
 
+int relative_primes(int x, int y, int z) {
+  int i;
+  for(i = 2; i <= x/2; i++) {
+    if(x % i == 0 && y % i == 0 && z % i == 0)
+      return 0;
+  }
+  if(y % x == 0 && z % x == 0)
+    return 0;
+  return 1;
+}
+
 int main() {
   int n;
   long x, y, z;
-  int l, u;
-  int  used_count, used[MAX];
+  double xx;
+  int i;
+  int rel_prime_count, used_count, used[MAX + 1];
   while(Si(n) != EOF) {
+    rel_prime_count = 0;
     used_count = 0;
-    for(l = 0; l < n; l++)
-      used[l] = 0;
+    for(i = 0; i < n; i++)
+      used[i] = 0;
     for(z = 2; z <= n; z++) {
       for(y = z - 1; z*z - y*y <= y*y; y--) {
-	l = 1;
-	u = y;
-	while(l <= u) {
-	  x = (u + l) / 2;
-	  if(x*x == z*z - y*y) {
-	    printf("%ld, %ld, %ld\n", x, y, z);
-	    if(used[x] == 0) {
-	      used[x] = 1;
-	      used_count++;
-	    }
-	    if(used[y] == 0) {
-	      used[y] = 1;
-	      used_count++;
-	    }
-	    if(used[z] == 0) {
-	      used[z] = 1;
-	      used_count++;
-	    }
-	    break;
-	  } else if(x*x < z*z - y*y)
-	    l = x + 1;
-	  else if(x*x > z*z - y*y)
-	    u = x - 1;
+	xx = sqrt(z*z - y*y);
+	x = (long)xx;
+	if(xx - x == 0) {
+	  /*	  printf("%ld, %ld, %ld\n", x, y, z); */
+	  if(relative_primes(x, y, z))
+	    rel_prime_count++;
+	  if(used[x] == 0) {
+	    used[x] = 1;
+	    used_count++;
+	  }
+	  if(used[y] == 0) {
+	    used[y] = 1;
+	    used_count++;
+	  }
+	  if(used[z] == 0) {
+	    used[z] = 1;
+	    used_count++;
+	  }
 	}
       }
     }
-    printf("%d %d\n", 0, n - used_count);
+    printf("%d %d\n", rel_prime_count, n - used_count);
   }
   return 0;
 }
