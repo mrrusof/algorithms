@@ -113,9 +113,13 @@
 
 int main() {
   int n;
-  int x, y, z;
+  long x, y, z;
   int l, u;
+  int  used_count, used[MAX];
   while(Si(n) != EOF) {
+    used_count = 0;
+    for(l = 0; l < n; l++)
+      used[l] = 0;
     for(z = 2; z <= n; z++) {
       for(y = z - 1; z*z - y*y <= y*y; y--) {
 	l = 1;
@@ -123,7 +127,19 @@ int main() {
 	while(l <= u) {
 	  x = (u + l) / 2;
 	  if(x*x == z*z - y*y) {
-	    printf("%d, %d, %d\n", x, y, z);
+	    printf("%ld, %ld, %ld\n", x, y, z);
+	    if(used[x] == 0) {
+	      used[x] = 1;
+	      used_count++;
+	    }
+	    if(used[y] == 0) {
+	      used[y] = 1;
+	      used_count++;
+	    }
+	    if(used[z] == 0) {
+	      used[z] = 1;
+	      used_count++;
+	    }
 	    break;
 	  } else if(x*x < z*z - y*y)
 	    l = x + 1;
@@ -132,6 +148,7 @@ int main() {
 	}
       }
     }
+    printf("%d %d\n", 0, n - used_count);
   }
   return 0;
 }
