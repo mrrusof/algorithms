@@ -3,3 +3,6 @@
 *~
 *.exe
 *.dSYM
+*.cmi
+*.cmo
+*.class
