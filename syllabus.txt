@@ -1,0 +1,14 @@
+- Sorting
+  - Quicksort
+  - Merge Sort
+  - Insertion Sort
+- Arrays
+  - Kadane
+- Graphs
+  - Floyd-Warshall
+  - Dijkstra
+  - Bellman-Ford
+  - Tarjan Simple Cycles
+  - Tarjan
+- Computational geometry
+  - Sweep-line
