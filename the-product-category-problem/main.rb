@@ -2,11 +2,12 @@
 
 class Product
 
-  attr_reader :name, :categories
+  attr_reader :name
+  attr_accessor :parent_categories
 
   def initialize name
     @name = name
-    @categories = []
+    @parent_categories = []
   end
 
   def to_s
@@ -16,7 +17,7 @@ class Product
   alias inspect to_s
 
   def categories
-    @categories.reduce [] do |acc, c|
+    @parent_categories.reduce [] do |acc, c|
       begin
         acc << c
         c = c.parent
@@ -29,7 +30,8 @@ end
 
 class Category
 
-  attr_reader :name, :products, :children, :parent
+  attr_reader :name, :products, :children
+  attr_accessor :parent
 
   def initialize name
     @name = name
@@ -47,22 +49,22 @@ class Category
   def add_product p
     if @children.empty?
       @products << p
-      p.instance_variable_get(:@categories) << self
+      p.parent_categories << self
     end
   end
 
   def add_category c
-    if @products.empty?
+    if @products.empty? and not c.parent
       @children << c
-      c.instance_variable_set :@parent, self
+      c.parent = self
     end
   end
 
-  def products
+  def all_products
     if @children.empty?
       @products
     else
-      @children.reduce [] { |acc, c| acc.concat c.products }
+      @children.reduce [] { |acc, c| acc.concat c.all_products }
     end
   end
 
@@ -91,11 +93,16 @@ end
 # food.add_product pizza
 # puts "food.products = #{food.products}"
 
+# gsg = Category.new 'gas station goods'
+# gsg.add_category gsf
+# puts "gsg.children = #{gsg.children}"
+# puts "gsf.parent = #{gsf.parent}"
+
 # puts "sandwich.categories = #{sandwich.categories}"
 
 # food.add_category ff
 # ff.add_product pizza
-# puts "food.products = #{food.products}"
+# puts "food.all_products = #{food.all_products}"
 
 
 
@@ -113,4 +120,4 @@ ff.add_product pizza
 
 puts "sandwich.categories = #{sandwich.categories}"
 puts "pizza.categories = #{pizza.categories}"
-puts "food.products = #{food.products}"
+puts "food.all_products = #{food.all_products}"
