@@ -49,71 +49,86 @@ SELECT c1.name AS parent, c2.name AS child
   FROM categories AS c1, categories AS c2
   WHERE c1.id = c2.parent;
 
--- CREATE FUNCTION if_no_sub_c(id integer)
---   RETURNS bool AS
--- $func$
---   SELECT NOT EXISTS (SELECT 1 FROM sub_c WHERE id = parent);
--- $func$ LANGUAGE sql STABLE;
+CREATE FUNCTION if_no_sub_c(cid integer)
+  RETURNS bool AS
+  $func$
+    SELECT NOT EXISTS (SELECT 1 FROM categories WHERE parent = cid);
+  $func$ LANGUAGE sql STABLE;
 
--- ALTER TABLE p_c ADD CONSTRAINT if_no_sub_c_check
---   CHECK (if_no_sub_c(cid));
+ALTER TABLE p_c ADD CONSTRAINT if_no_sub_c_check
+  CHECK (if_no_sub_c(cid));
 
--- INSERT INTO products (name) VALUES ('pizza');
--- INSERT INTO p_c (pid, cid) VALUES (2, 2);
--- SELECT count(*) from p_c, sub_c WHERE cid = parent;
+INSERT INTO products (name) VALUES ('pizza');
+SELECT products.name AS product, categories.name AS category
+  FROM products, p_c, categories
+  WHERE products.id = pid AND cid = categories.id;
+INSERT INTO p_c (pid, cid)
+  SELECT products.id, categories.id
+  FROM products, categories
+  WHERE products.name = 'pizza' AND categories.name = 'food';
+SELECT products.name AS product, categories.name AS category
+  FROM products, p_c, categories
+  WHERE products.id = pid AND cid = categories.id;
 
--- CREATE FUNCTION if_no_p(id integer)
---   RETURNS bool AS
--- $func$
---   SELECT NOT EXISTS (SELECT 1 FROM p_c WHERE id = pid);
--- $func$ LANGUAGE sql STABLE;
+CREATE FUNCTION if_no_prod(id integer)
+  RETURNS bool AS
+  $func$
+    SELECT NOT EXISTS (SELECT 1 FROM p_c WHERE cid = id);
+  $func$ LANGUAGE sql STABLE;
 
--- ALTER TABLE sub_c ADD CONSTRAINT if_no_p_check
---   CHECK (if_no_p(parent));
+ALTER TABLE categories ADD CONSTRAINT if_no_prod_check
+  CHECK (if_no_prod(parent));
 
--- INSERT INTO categories (name) VALUES ('fast food');
--- INSERT INTO sub_c (parent, child) VALUES (1, 3);
--- SELECT count(*) from p_c, sub_c WHERE cid = parent;
+SELECT * FROM categories;
+INSERT INTO categories (name, parent)
+  SELECT 'fast food', gsf.id
+  FROM categories AS gsf
+  WHERE gsf.name = 'gas station food';
+SELECT * FROM categories;
 
--- CREATE FUNCTION categories(product_id integer)
---   RETURNS TABLE (category varchar(50)) AS
--- $func$
---   WITH RECURSIVE cats(pid, cid, category) AS (
---       SELECT pid, cid, name
---       FROM p_c, categories
---       WHERE cid = id
---     UNION ALL
---       SELECT pid, parent, name
---       FROM cats, sub_c, categories
---       WHERE cid = child AND parent = id
---   )
---   SELECT category FROM cats WHERE pid = product_id;
--- $func$ LANGUAGE sql;
+CREATE FUNCTION categories(product_id integer)
+  RETURNS TABLE (category varchar(50)) AS
+  $func$
+    WITH RECURSIVE cats(pid, cid, name, parent) AS (
+      SELECT pid, categories.*
+      FROM p_c, categories
+      WHERE cid = id
+    UNION ALL
+      SELECT pid, categories.*
+      FROM cats, categories
+      WHERE cats.parent = categories.id
+    )
+    SELECT name FROM cats WHERE pid = product_id;
+  $func$ LANGUAGE sql;
 
--- SELECT categories(id) FROM products WHERE name = 'sandwich';
+SELECT categories(id) FROM products WHERE name = 'sandwich';
+SELECT categories(id) FROM products WHERE name = 'pizza';
+INSERT INTO categories (name, parent)
+  SELECT 'fast food', categories.id
+  FROM categories
+  WHERE name = 'food';
+INSERT INTO p_c (pid, cid)
+  SELECT products.id, categories.id
+  FROM products, categories
+  WHERE products.name = 'pizza' AND categories.name = 'fast food';
+SELECT categories(id) FROM products WHERE name = 'pizza';
 
--- CREATE FUNCTION products(category_id integer)
---   RETURNS TABLE (products varchar(50)) AS
--- $func$
---   WITH RECURSIVE prods(cid, pid, product) AS (
---       SELECT cid, pid, name
---       FROM p_c, products
---       WHERE pid = id
---     UNION
---       SELECT parent, pid, product
---       FROM prods, sub_c
---       WHERE cid = child
---   )
---   SELECT product FROM prods WHERE cid = category_id
--- $func$ LANGUAGE sql;
+CREATE FUNCTION products(category_id integer)
+  RETURNS TABLE (products varchar(50)) AS
+  $func$
+    WITH RECURSIVE prods(cid, parent, pid, product) AS (
+        SELECT cid, parent, pid, products.name
+        FROM p_c, products, categories
+        WHERE pid = products.id AND cid = categories.id
+      UNION ALL
+        SELECT par.id, par.parent, pid, product
+        FROM prods, categories AS par
+        WHERE prods.parent = par.id
+    )
+    SELECT product FROM prods WHERE cid = category_id
+  $func$ LANGUAGE sql;
 
--- SELECT products(id) FROM categories WHERE name = 'food';
--- INSERT INTO sub_c (parent, child)
---   SELECT food.id, ff.id
---   FROM categories AS food, categories AS ff
---   WHERE food.name = 'food' AND ff.name = 'fast food';
--- INSERT INTO p_c (pid, cid)
---   SELECT pizza.id, ff.id
---   FROM products AS pizza, categories AS ff
---   WHERE pizza.name = 'pizza' AND ff.name = 'fast food';
--- SELECT products(id) FROM categories WHERE name = 'food';
+SELECT products(id) FROM categories WHERE name = 'food';
+SELECT products(id) FROM categories WHERE name = 'fast food';
+SELECT products(id) FROM categories WHERE name = 'gas station food';
+
