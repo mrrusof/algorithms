@@ -2,4 +2,4 @@ all:
 	gcc -g -DONLINE_JUDGE -o main.exe main.c
 
 clean:
-	rm -rf *~ *.exe *.DSYM
+	rm -rf *~ *.exe *.dSYM
