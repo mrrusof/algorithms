@@ -76,7 +76,7 @@ int main() {
       suffix[sl++] = r;
       hh[l] = h;
       suffix[sl++] = l;
-    } else { /* h < ch */
+    } else { /* h <= ch */
       for(; sl > 0 && suffix[sl - 1] < r && hh[suffix[sl - 1]] > h; sl--)
 	rev_suffix[rsl++] = suffix[sl - 1];
       if(sl > 0 && suffix[sl - 1] < r) {
