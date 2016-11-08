@@ -7,46 +7,28 @@ end
 
 def sliding_window_maximum nn, k
   return [] if nn.length == 0
-  m1 = nn[0]
-  p1 = 0
-  m2 = nil
-  p2 = nil
-  for i in 1..(k-1)
-    if nn[i] >= m1
-      m1 = nn[i]
-      p1 = i
+  mmpp = []
+  mm = []
+  for i in 0..(k-1)
+    while mmpp.last and mmpp.last[0] <= nn[i]
+      mmpp.pop
     end
+    mmpp << [nn[i], i]
   end
-  for i in (p1+1)..(k-1)
-    if m2 == nil or nn[i] >= m2
-      m2 = nn[i]
-      p2 = i
-    end
-  end
-  # puts "max\tnn"
-  # puts "---\t----------------------------------------"
-  # puts "#{m1}\t[#{nn[0..k-1].join('  ')}] #{nn[k+1..-1].join('  ')}"
-  mm = [m1]
+  mm << mmpp.first[0]
+#  puts "mmpp = #{mmpp}"
   for i in 0..(nn.length - k - 1)
     # contract
-    if p1 == i
-      m1 = m2
-      p1 = p2
-      m2 = nil
-      p2 = nil
+    if mmpp.first and mmpp.first[1] == i
+      mmpp.delete_at(0)
     end
     # expand
-    if m1 == nil or nn[i + k] >= m1
-      m1 = nn[i + k]
-      p1 = i + k
-      m2 = nil
-      p2 = nil
-    elsif m2 == nil or nn[i + k] >= m2
-      m2 = nn[i + k]
-      p2 = i + k
+    while mmpp.last and mmpp.last[0] <= nn[i + k]
+      mmpp.pop
     end
-#    puts "#{m1}\t #{nn[0..i].join('  ')} [#{nn[i+1..i+k].join('  ')}] #{nn[i+k+1..-1].join('  ') if nn[i+1+k+1..-1]}"
-    mm << m1
+    mmpp << [nn[i + k], i + k]
+    mm << mmpp.first[0]
+#    puts "mmpp = #{mmpp}"
   end
   return mm
 end
