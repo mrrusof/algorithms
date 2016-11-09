@@ -16,7 +16,6 @@ def sliding_window_maximum nn, k
     mmpp << [nn[i], i]
   end
   mm << mmpp.first[0]
-#  puts "mmpp = #{mmpp}"
   for i in 0..(nn.length - k - 1)
     # contract
     if mmpp.first and mmpp.first[1] == i
@@ -28,19 +27,15 @@ def sliding_window_maximum nn, k
     end
     mmpp << [nn[i + k], i + k]
     mm << mmpp.first[0]
-#    puts "mmpp = #{mmpp}"
   end
   return mm
 end
 
 def main
   while true
-    # assume k > 0
+    # assume k > 0 when nn.length > 0
     k = readline.to_i rescue break
-    # assume nn.length > 0
     nn = readline.split.map(&:to_i) rescue break
-    # puts "k = #{k}"
-    # puts "nn = #{nn}"
     mm = sliding_window_maximum nn, k
     if mm.length > 0
       puts mm.join(' ')
