@@ -10,23 +10,50 @@
 #
 # Do |V| depth-first-searches maybe?
 #
+# def is_it_possible? cc, dd
+#   vv = (0..(cc-1)).to_a
+#   ss = vv.map { |_| [] }
+#   dd.each { |from, to| ss[from] << to }
+#   vv.each do |v|
+#     w = [v]
+#     d = { v => true }
+#     begin
+#       c = w.pop
+#       ss[c].each do |s|
+#         return false if s == v
+#         w << s if not !!d[s]
+#         d[s] = true
+#       end
+#     end while not w.empty?
+#   end
+#   return true
+# end
+#
+# What about this other algorithm? It is O(V + E)!
+#
 def is_it_possible? cc, dd
   vv = (0..(cc-1)).to_a
   ss = vv.map { |_| [] }
   dd.each { |from, to| ss[from] << to }
-  vv.each do |v|
-    w = [v]
-    d = { v => true }
-    begin
-      c = w.pop
-      ss[c].each do |s|
-        return false if s == v
-        w << s if not !!d[s]
-        d[s] = true
-      end
-    end while not w.empty?
+  cfh = {}
+  yjwth = {}
+  return !vv.any? do |v|
+    cycles_from_here? v, ss, cfh, yjwth
   end
-  return true
+end
+
+# cfh:   cycles from here?
+# yjwth: you just went through here!
+def cycles_from_here? v, ss, cfh, yjwth
+  return true if !!yjwth[v]
+  if cfh[v] == nil
+    yjwth[v] = true
+    cfh[v] = ss[v].any? do |s|
+      cycles_from_here? s, ss, cfh, yjwth
+    end
+    yjwth[v] = false
+  end
+  return cfh[v]
 end
 
 [ [3, [[0,1],[0,2],[1,2]], true],
