@@ -10,5 +10,7 @@
   - Bellman-Ford
   - Tarjan Simple Cycles
   - Tarjan
+  - Topological Sorting
+    - Cycle detection by Topological Sorting
 - Computational geometry
   - Sweep-line
