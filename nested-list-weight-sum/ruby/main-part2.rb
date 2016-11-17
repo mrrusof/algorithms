@@ -21,9 +21,9 @@ one 4 at depth 2, and one 6 at depth 1; 1*3 + 4*2 + 6*1 = 17)
 
 =end
 
-def max_depth a, d
+def depth a
   if a.is_a? Array
-    return a.map{ |e| 1 + max_depth(e, d) }.max
+    return a.map{ |e| 1 + depth(e) }.max
   else
     return 0
   end
@@ -40,7 +40,7 @@ def nlws a, d
 end
 
 def nested_list_weight_sum a
-  d = max_depth a, 0
+  d = depth a
   return nlws a, d
 end
 
