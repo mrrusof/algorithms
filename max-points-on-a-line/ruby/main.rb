@@ -19,8 +19,8 @@ def mpoal pp
   m = if pp.length > 0 then 1 else 0 end
   pp.each_with_index do |a, i|
     break if m >= pp.length - i
-    h = {}
-    ms = 0
+    buckets = {}
+    max_bucket = 0
     count_a = 1
     pp[i+1..-1].each do |b|
       if b[0] - a[0] == 0
@@ -31,19 +31,36 @@ def mpoal pp
       if a == b
         count_a += 1
       else
-        h[slope] = 0 if not h.has_key?(slope)
-        h[slope] += 1
-        ms = [ms, h[slope]].max
+        buckets[slope] = 0 if not buckets.has_key?(slope)
+        buckets[slope] += 1
+        max_bucket = [max_bucket, buckets[slope]].max
       end
-      m = [m, count_a + ms].max
+      m = [m, count_a + max_bucket].max
     end
   end
   return m
 end
 
-def max_points pp
-  return mpoal pp.map {|p| [p.x, p.y]}
-end
+# For the blog
+#
+# def main
+#   n = readline.to_i
+#   pp = []
+#   while n > 0
+#     p = readline.strip.split(' ').map{ |c| c.to_i }
+#     pp << p
+#     n -= 1
+#   end
+#   puts mpoal(pp)
+# end
+
+# main
+
+# For the judge.
+#
+# def max_points pp
+#   return mpoal pp.map {|p| [p.x, p.y]}
+# end
 
 [ [ [ [1,2], [3,4] ],
     2 ],
