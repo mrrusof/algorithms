@@ -36,7 +36,6 @@ def do_et offset, l, s, ww
     # contract
     if ttq.length > ww.length
       h, _ = ttq.delete_at 0
-      # puts "del h = #{h}"
       if wc.has_key? h
         wc[h] += 1
       end
@@ -54,8 +53,23 @@ def swcoaw s, ww
   return (0..l-1).reduce([]) { |o, i| o + do_et(i, l, s[i..-1], ww) }
 end
 
+# For the blog
+#
+# def main
+#   s = readline rescue abort('Could not read string.')
+#   ww = readline.split(' ') rescue abort('Could not read words.')
+#   puts swcoaw(s, ww).join(' ')
+# end
+
+# main
+
 [ [ "barfoothefoobarman", ["foo", "bar"], [0,9] ],
+  [ "barfoomanthefoobar", ["foo", "bar"], [0,12] ],
+  [ "barthefoomanfoothebar", ["foo", "bar"], [] ],
   [ "bbarfoothefoobarman", ["foo", "bar"], [1,10] ],
+  [ "bartfoomfootbar", ["foo", "bar"], [] ],
+  [ "bartfoomfoobar", ["foo", "bar"], [8] ],
+  [ "bartfoomf ob r", ["foo", "bar"], [] ],
   [ "foom", ["foo"], [0] ],
   [ "foom", ["oom"], [1] ],
   [ "barfoofoobarthefoobarman", ["bar","foo","the"], [6,9,12] ]
