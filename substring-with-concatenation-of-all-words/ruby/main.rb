@@ -27,21 +27,32 @@ def do_et offset, l, s, ww
   ttq = []
   wc = {}
   ww.each { |w| if wc.has_key? w then wc[w] += 1 else wc[w] = 1 end }
+  zc = wc.length
   tt.each_with_index do |t, i|
     # expand
     ttq << [t, i * l + offset]
     if wc.has_key? t
+      if wc[t] == 1
+        zc -= 1
+      elsif wc[t] == 0
+        zc += 1
+      end
       wc[t] -= 1
     end
     # contract
     if ttq.length > ww.length
       h, _ = ttq.delete_at 0
       if wc.has_key? h
+        if wc[h] == -1
+          zc -= 1
+        elsif wc[h] == 0
+          zc += 1
+        end
         wc[h] += 1
       end
     end
     # check
-    if wc.all? { |k, v| v == 0 }
+    if zc == 0
       o << ttq.first[1]
     end
   end
@@ -49,6 +60,7 @@ def do_et offset, l, s, ww
 end
 
 def swcoaw s, ww
+  return [] if ww.length == 0
   l = ww.first.length
   return (0..l-1).reduce([]) { |o, i| o + do_et(i, l, s[i..-1], ww) }
 end
@@ -70,6 +82,8 @@ end
   [ "bartfoomfootbar", ["foo", "bar"], [] ],
   [ "bartfoomfoobar", ["foo", "bar"], [8] ],
   [ "bartfoomf ob r", ["foo", "bar"], [] ],
+  [ "foofoofoo", ["foo", "foo"], [0,3] ],
+  [ "foofoofoo", [], [] ],
   [ "foom", ["foo"], [0] ],
   [ "foom", ["oom"], [1] ],
   [ "barfoofoobarthefoobarman", ["bar","foo","the"], [6,9,12] ]
