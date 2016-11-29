@@ -76,7 +76,8 @@ end
   ['ababb', 5],
   ['abbab', 5],
   ['abbba', 5],
-  ['eceba', 3]
+  ['eceba', 3],
+  ['abcbbbbcccbdddadacb', 10]
 ].each do |s, exp|
   act = lswamtdc s
   if act == exp
