@@ -16,6 +16,12 @@ def unique(p):
       s += v
   return s
 
+# with open('/dev/stdin', 'rt') as f:
+#   line = f.readline()
+#   while line:
+#     print unique(line.rstrip())
+#     line = f.readline()
+
 tc = [
     ['', 0],
     ['a', 1],

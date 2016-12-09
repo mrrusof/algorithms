@@ -17,6 +17,15 @@ def unique p
   return ll.to_a.reduce(0) { |s,v| s+v[1] }
 end
 
+# def main
+#   while true
+#     p = readline.strip rescue break
+#     puts unique(p)
+#   end
+# end
+
+# main
+
 [ ['', 0],
   ['a', 1],
   ['cac', 2],
