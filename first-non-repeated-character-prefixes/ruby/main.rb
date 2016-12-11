@@ -33,6 +33,11 @@ def first_non_repeated_prefix s
   return o
 end
 
+# while true
+#   s = readline.strip rescue break
+#   puts first_non_repeated_prefix(s)
+# end
+
 [ ['', nil],
   ['a', 'a'],
   ['aa', 'a'],

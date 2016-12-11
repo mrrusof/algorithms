@@ -25,6 +25,11 @@ def first_non_repeated s
   return s.chars.find { |c| h[c] == :not_repeated }
 end
 
+# while true
+#   s = readline.strip rescue break
+#   puts first_non_repeated(s)
+# end
+
 [ ['', nil],
   ['a', 'a'],
   ['aa', nil],
