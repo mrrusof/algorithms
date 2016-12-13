@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# Ex. 15.1-3: Consider a fixed cost for all cuts.
+
 def bottom_up_cut_rod n, p, c
   r = [0]
   (1..n).each do |l|
