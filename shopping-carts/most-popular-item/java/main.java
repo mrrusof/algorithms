@@ -42,31 +42,31 @@ import java.util.ArrayList;
 public class main {
     public static void main(String argv[]) {
 
-        List<Map<Object, Object>> carts = new ArrayList<Map<Object, Object>>();
+        List<Map<Integer, Object>> carts = new ArrayList<Map<Integer, Object>>();
 
-        Map<Object, Object> sc1 = new HashMap<Object, Object>();
+        Map<Integer, Object> sc1 = new HashMap<Integer, Object>();
         sc1.put(1, 1);
         sc1.put(2, 1);
         sc1.put(3, 2);
         carts.add(sc1);
 
-        Map<Object, Object> sc2 = new HashMap<Object, Object>();
+        Map<Integer, Object> sc2 = new HashMap<Integer, Object>();
         sc2.put(2, 1);
         sc2.put(3, 1);
         carts.add(sc2);
 
-        Map<Object, Object> sc3 = new HashMap<Object, Object>();
+        Map<Integer, Object> sc3 = new HashMap<Integer, Object>();
         sc3.put(1, 1);
         sc3.put(3, 1);
         carts.add(sc3);
 
-        Map<Object, Object> popularity = new HashMap<Object, Object>();
-        for(Map<Object, Object> sc : carts) {
-            for(Map.Entry<Object, Object> e : sc.entrySet()) {
+        Map<Integer, Integer> popularity = new HashMap<Integer, Integer>();
+        for(Map<Integer, Object> sc : carts) {
+            for(Map.Entry<Integer, Object> e : sc.entrySet()) {
                 if(popularity.get(e.getKey()) == null) {
                     popularity.put(e.getKey(), 1);
                 } else {
-                    Integer p = (Integer)popularity.get(e.getKey());
+                    Integer p = popularity.get(e.getKey());
                     popularity.put(e.getKey(), p + 1);
                 }
             }
@@ -74,10 +74,10 @@ public class main {
         
         Integer mk = null;
         Integer max = null;
-        for(Map.Entry<Object, Object> e : popularity.entrySet()) {
-            if(max == null || max < (Integer)e.getValue()) {
-                mk = (Integer)e.getKey();
-                max = (Integer)e.getValue();
+        for(Map.Entry<Integer, Integer> e : popularity.entrySet()) {
+            if(max == null || max < e.getValue()) {
+                mk = e.getKey();
+                max = e.getValue();
             }
         }
         System.out.println("most popular product is " + mk);
