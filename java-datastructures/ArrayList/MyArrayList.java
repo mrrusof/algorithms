@@ -1,4 +1,6 @@
 import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class MyArrayList<E> {
 
@@ -15,7 +17,6 @@ public class MyArrayList<E> {
         this(10);
     }
 
-    // optional
     public boolean add(E e) {
         if(length >= data.length) {
             Object[] t = new Object[data.length + 1 * 2];
@@ -25,6 +26,14 @@ public class MyArrayList<E> {
         }
         data[length++] = e;
         return true;
+    }
+
+    public void add(int index, E e) {
+        checkRange(index);
+        add(e);
+        for(int i = index + 1; i < length; i++)
+            data[i] = data[i - 1];
+        data[index] = e;
     }
 
     public boolean contains(Object o) {
@@ -40,10 +49,9 @@ public class MyArrayList<E> {
     //     throw new Exception("WIP");
     // }
 
-    @SuppressWarnings("unchecked")
     public E get(int index) {
         checkRange(index);
-        return (E)data[index];
+        return doGet(index);
     }
 
     // public int hashCode() {
@@ -69,9 +77,9 @@ public class MyArrayList<E> {
     //     throw new Exception("WIP");
     // }
 
-    // public ListIterator<E> listIterator() {
-    //     throw new Exception("WIP");
-    // }
+    public ListIterator<E> listIterator() {
+        return new LI<E>(this);
+    }
 
     // public ListIterator<E> listIterator(int index) {
     //     throw new Exception("WIP");
@@ -103,6 +111,13 @@ public class MyArrayList<E> {
     //     throw new Exception("WIP");
     // }
 
+    public E set(int index, E element) {
+        checkRange(index);
+        E old = doGet(index);
+        data[index] = element;
+        return old;
+    }
+
     public int size() {
         return length;
     }
@@ -130,5 +145,63 @@ public class MyArrayList<E> {
     private void checkRange(int index) {
         if(index >= length)
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + length);
+    }
+
+    @SuppressWarnings("unchecked")
+    private E doGet(int index) {
+        return (E)data[index];
+    }
+
+    private class LI<E> implements ListIterator<E> {
+        MyArrayList list;
+        int pos;
+
+        LI(MyArrayList<E> _list) {
+            list = _list;
+        }
+
+        @SuppressWarnings("unchecked")
+        public void add(E e) {
+            list.add(pos, e);
+        }
+
+        public boolean hasNext() {
+            return pos < list.size();
+        }
+
+        public boolean hasPrevious() {
+            return 0 < pos;
+        }
+
+        @SuppressWarnings("unchecked")
+        public E next() {
+            return (E)list.get(pos++);
+        }
+
+        public int nextIndex() {
+            if(!hasNext())
+                throw new NoSuchElementException();
+            return pos;
+        }
+
+        @SuppressWarnings("unchecked")
+        public E previous() {
+            return (E)list.get(--pos);
+        }
+
+        public int previousIndex() {
+            if(!hasPrevious())
+                throw new NoSuchElementException();
+            return pos - 1;
+        }
+
+        public void remove() {
+            list.remove(pos);
+        }
+
+        @SuppressWarnings("unchecked")
+        public void set(E e) {
+            list.set(pos, e);
+        }
     }
 }
