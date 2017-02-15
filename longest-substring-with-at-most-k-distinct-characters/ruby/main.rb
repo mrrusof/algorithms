@@ -5,7 +5,7 @@
 Given a string, find the length of the longest substring `t` that
 contains at most 2 distinct characters.
 
-For example, Given `s` = "eceba",
+For example, given `s` = "eceba",
 
 `t` is "ece" which its length is 3.
 
