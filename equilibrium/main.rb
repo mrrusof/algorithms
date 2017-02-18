@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
 def equilibrium_index nn
-  return -1 if nn.length < 2
+  return -1 if nn.length == 0
+  return 0 if nn.length == 1
   ls = 0
   rs = nn[1..-1].reduce(0, &:+)
   nn[0..-2].each_with_index do |n, i|
