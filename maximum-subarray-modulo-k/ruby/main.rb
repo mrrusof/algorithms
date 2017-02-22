@@ -1,34 +1,46 @@
 #!/usr/bin/env ruby
 
+# def max_subarray k, nn
+#   return -1 if nn.length == 0
+#   max = 0
+#   sp = nn.map { |_| -1 }   # starting position
+#   iz = 0                   # index of value zero
+#   nn.each_with_index do |n, i|
+
+#     m = n % k
+
+#     # store m and increment value of each starting position
+#     sp[iz] = i             # remember starting position for value m
+#     iz -= m                # shift index of zero
+#     iz += k if iz < 0      # wraparound index of zero
+
+#     # find maximum value of subarray that ends in position i
+#     v = k - 1              # candidate value is maximum possible
+#     j = iz - 1             # index of candidate value w/o wraparound
+#     j = k - 1 if j == -1   # wraparound index of candidate value
+#     while j != iz and max < v
+#       if 0 <= sp[j]        # is there a starting pos for candidate value?
+#         max = v
+#         return max if max = k - 1
+#         break
+#       end
+#       v -= 1               # try next candidate value
+#       j = k - 1 if (j -= 1) == -1
+#     end
+#   end
+#   return max
+# end
+
 def max_subarray k, nn
   return -1 if nn.length == 0
   max = 0
-  sp = {}                  # starting position
-  iz = 0                   # index of value zero
-  puts k, nn
-  return 0
+  dd = []
   nn.each_with_index do |n, i|
-
-    m = n % k
-
-    # store m and increment value of each starting position
-    sp[iz] = i             # remember starting position for value m
-    iz -= m                # shift index of zero
-    iz += k if iz < 0      # wraparound index of zero
-
-    # find maximum value of subarray that ends in position i
-    v = k - 1              # candidate value is maximum possible
-    j = iz - 1             # index of candidate value w/o wraparound
-    j = k - 1 if j == -1   # wraparound index of candidate value
-    while j != iz and max < v
-      if 0 <= sp[j]        # is there a starting pos for candidate value?
-        max = v
-        return max if max = k - 1
-        break
-      end
-      v -= 1               # try next candidate value
-      j = k - 1 if (j -= 1) == -1
-    end
+    dd.map! { |d| (d + n) % k }
+    dd.select! { |d| d != 0 }
+    dd << n % k
+    dd.uniq!
+    max = [max, dd.max].max
   end
   return max
 end
