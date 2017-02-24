@@ -54,9 +54,19 @@ The maximum is 6.
 
 The proposed solution is `O(n log n)`.
 
+- Search for maximum.
+- Maximum is maximum amongst end poss.
+- Search for maximum for each end pos amongst values for pos.
+- Don't compute values for pos and then search for maximum.
+- Compute values for pos on demand when you search for maximum.
+  - Start with value last segment of subarray.
+  - Look for biggest value that does not overflow value of last segment of subarray.
+  - If none, take last segment of subarray.
 ```
    A: 3 5 2 2 2
  pos: 0 1 2 3 4
+
+      3 5 3 5 6  <- max for end pos
 
       3 1 3 5 0  <- start pos 0
         5 0 2 4  <- start pos 1
@@ -72,6 +82,35 @@ The proposed solution is `O(n log n)`.
       | end pos 1
       end pos 0
 ```
+
+```
+------------------
+-------
+       |----------|
+
+       
+   A: 3 5 2 2 2
+ pos: 0 1 2 3 4
+
+      3 1 3 5 0  <- value of longest array
+      3 8 0 2 4
+
+   0: 0         -> 0
+   1:     2     -> 6
+   2:         
+   3:   1   3   -> 4
+   4: 
+   5:         4 -> 2
+   6:         
+   ^  ^ ^ ^ ^ ^
+   |  | | | | |
+   |  | | | | end pos 4
+   |  | | | end pos 3
+   |  | | end pos 2
+   |  | end pos 1
+   |  end pos 0
+   offset from left
+
 
 ```
    A: 3 5 2 2 2
@@ -119,8 +158,10 @@ The proposed solution is `O(n log n)`.
    A: 3 5 2 2 2
  pos: 0 1 2 3 4
 
+      3 1 3 5 0  <- offset for end pos
+
    0: 0       *
-   1:   
+   1:       *
    2:         4
    3:   
    4: * 1 * 3  
