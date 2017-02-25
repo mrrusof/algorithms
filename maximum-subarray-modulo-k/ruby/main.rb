@@ -38,12 +38,17 @@ def max_subarray_correct k, nn
   return -1 if nn.length == 0
   max = 0
   dd = []
+#  puts "i\tn\t\tv\t\tmax_here\tcomplement"
   nn.each_with_index do |n, i|
     dd.map! { |d| (d + n) % k }
     dd.select! { |d| d != 0 }
-    dd << n % k
+    v = n % k
+    dd << v
     dd.uniq!
-    max = [max, dd.max].max
+    max_here = dd.max
+    complement = max_here - v
+#    puts "#{i}\t#{n}\t#{v}\t#{max_here}\t#{complement}"
+    max = [max, max_here].max
   end
   return max
 end
@@ -183,30 +188,55 @@ def max_subarray k, nn
 
   return -1 if nn.length == 0
 
-  nn.map! { |n| n % k }
   max = 0
-  longest = 0
+  longest_value = 0
   offsets = SelfBalancingTree.new
+
+#  puts "i\tn\t\tv\t\tmax_here\tcomplement"
 
   nn.each_with_index do |n, i|
 
     # find the maximum value amongst subarrays that end here
-    complement_limit = k - 1 - n
-    minimum_offset = longest - complement_limit
-    complement_offset = offsets.bsearch { |n| minimum_offset <= n } # O(log nn.length)
-    if !complement_offset
-      max_here = n
+    v = n % k
+    complement_limit_value = k - 1 - v
+    if longest_value >= complement_limit_value
+      minimum_offset_value = longest_value - complement_limit_value
+      complement_offset_value = offsets.bsearch { |n| minimum_offset_value <= n } # O(log nn.length)
+      if !complement_offset_value or complement_offset_value >= longest_value
+        complement_value = 0
+        max_here = v
+      else
+        complement_value = longest_value - complement_offset_value
+        complement_value += k if longest_value < complement_offset_value
+        max_here = v + complement_value
+      end
     else
-      complement = longest - complement_offset
-      max_here = n + complement
+      minimum_offset_value = longest_value + k - complement_limit_value
+      complement_offset_value = offsets.bsearch { |n| minimum_offset_value <= n } # O(log nn.length)
+      if !complement_offset_value
+        complement_offset_value = offsets.bsearch { |n| 0 <= n } # O(log nn.length)
+      end
+
+      if !complement_offset_value or (complement_offset_value >= longest_value and complement_offset_value < minimum_offset_value)
+        complement_value = 0
+        max_here = v
+      else
+        complement_value = longest_value - complement_offset_value
+        complement_value += k if longest_value < complement_offset_value
+        max_here = v + complement_value
+      end
     end
+
+#    puts "#{i}\t#{n}\t#{v}\t#{max_here}\t#{complement_value}"
 
     max = [max, max_here].max
 
+    return max if max == k - 1
+
     # remember offset for this position
-    current_offset = longest
-    offsets.add! current_offset # O(log nn.length)
-    longest = (longest + n) % k
+    current_offset_value = longest_value
+    offsets.add! current_offset_value # O(log nn.length)
+    longest_value = (longest_value + v) % k
   end
 
   return max
@@ -277,5 +307,6 @@ _ = readline
 while true
   _, k = readline.strip.split(' ').map(&:to_i) rescue break
   nn = readline.strip.split(' ').map(&:to_i) rescue break
+#  puts "k = #{k}"
   puts max_subarray k, nn
 end
