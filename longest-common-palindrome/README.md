@@ -5,7 +5,7 @@
 Given a set of strings, find the length of a longest common
 palindrome.
 
-For example, for the length of a longest common palindrome for the
+For example, the length of a longest common palindrome for the
 following strings is 4 because a longest common palindrome is `kikj`.
 
 ```
@@ -40,8 +40,6 @@ file.
 ```
 
 # Solution
-
-The proposed solution belongs to time and space complexity `O(n)`.
 
 Consider the count of letters for each word.
 

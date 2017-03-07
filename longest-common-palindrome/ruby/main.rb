@@ -1,20 +1,20 @@
 #!/usr/bin/env ruby
 
 def length_of_longest_common_palindrome mm # mm is array of messages
-  mins = {}
-  mm.each_with_index { |m, i|
-    letters = {}
-    m.chars.each { |c|
-      letters[c] ||= 0
-      letters[c] += 1
+  mins = Array.new(26)
+  count = Array.new(26)
+  mm.each { |m|
+    count.map! { |_| 0 }
+    m.chars.each { |l|
+      count[l.ord - 'a'.ord] += 1
     }
-    letters.to_a.each { |c, v|
-      if i == 0 or (mins[c] != nil and v < mins[c])
-        mins[c] = v
+    count.each_with_index { |c, l|
+      if mins[l] == nil or c < mins[l]
+        mins[l] = c
       end
     }
   }
-  return mins.values.reduce(0, &:+)
+  return mins.reduce(0, &:+)
 end
 
 while true
