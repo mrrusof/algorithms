@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-def length_of_longest_common_palindrome mm # mm is array of messages
+def length_of_longest_common_anagram mm # mm is array of messages
   mins = Array.new(26)
   count = Array.new(26)
   mm.each { |m|
@@ -25,5 +25,5 @@ while true
     mm << m
     n -= 1
   end
-  puts length_of_longest_common_palindrome mm
+  puts length_of_longest_common_anagram mm
 end

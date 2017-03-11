@@ -1,12 +1,12 @@
 # Problem
 
-[Original problem statement](https://www.urionlinejudge.com.br/judge/en/problems/view/1503).
+[Inspired by this problem statement](https://www.urionlinejudge.com.br/judge/en/problems/view/1503).
 
 Given a set of strings, find the length of a longest common
-palindrome.
+anagram.
 
-For example, the length of a longest common palindrome for the
-following strings is 4 because a longest common palindrome is `kikj`.
+For example, the length of a longest common anagram for the
+following strings is 4 because a longest common anagram is `kikj`.
 
 ```
 ijkik
@@ -31,7 +31,7 @@ kljkikiijk
 **Output.**
 The output file consists of one line per case, each consisting of a
 single integer that indicates the length of the longest common
-palindrome for the case.
+anagram for the case.
 The following is the output file that corresponds to the sample input
 file.
 
@@ -51,8 +51,8 @@ kkjki      | 1 | 1 | 3 | 0
 kljkikiijk | 3 | 2 | 4 | 1
 ```
 
-A longest common palindrome consists only of letters appearing in the
-words.  For each letter, a longest common palindrome has as many
+A longest common anagram consists only of letters appearing in the
+words.  For each letter, a longest common anagram has as many
 instances of the letter as the minimum count amongst the words.
 Consider the minimum count of letters amongst the words.
 
@@ -67,5 +67,5 @@ kljkikiijk | 3 | 2 | 4 | 1
 ```
 
 Given the minimum count of letters, we know that a longest common
-palindrome consists of one `i`, one `j`, and two `k`, thus giving a
+anagram consists of one `i`, one `j`, and two `k`, thus giving a
 grand total of 4 letters.
