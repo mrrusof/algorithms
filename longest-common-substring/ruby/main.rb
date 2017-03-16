@@ -1,12 +1,9 @@
 #!/usr/bin/env ruby
 
 def substring s1, s2
-  s1p = 0
-  s2.chars.each_with_index do |c, i|
-    s1p = 0 if s1[s1p] != c
-    if s1[s1p] == c
-      s1p += 1
-      return i - s1.length + 1 if s1p == s1.length
+  (0..(s2.length - s1.length)).each do |i|
+    if (0...s1.length).all? { |j| s2[i+j] == s1[j] }
+      return i
     end
   end
   return -1
