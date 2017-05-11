@@ -20,6 +20,7 @@ a = aabbxbbcaab
      -
      --
      ---
+        |
          -
           -
           --
@@ -82,12 +83,42 @@ def shortest a, b
   if min_length < a.length + 1
     return a[(min_left + 1)..min_right]
   else
-    return nil
+    return ''
+  end
+end
+
+def shortest_substring_of_allowed_letters s, allowed
+  last = allowed.chars.map { |c| [c, -1] }.to_h
+  allowed_count = 0
+  min_left = min_right = left = other_last = -1
+  min_length = s.length + 1
+  s.chars.each_with_index do |c, right|
+    if last.has_key? c
+      allowed_count += 1 if last[c] <= other_last
+      last[c] = right
+      while last[s[left]] != left
+        left += 1
+      end
+      length = right - left + 1
+      if allowed_count == last.size and length < min_length
+        min_length = length
+        min_left = left
+        min_right = right
+      end
+    else
+      other_last = right
+      allowed_count = 0
+    end
+  end
+  if min_length < s.length + 1
+    return s[min_left..min_right]
+  else
+    return ''
   end
 end
 
 while true
   a = readline.strip rescue break
   b = readline.strip rescue break
-  puts shortest a, b
+  puts shortest_substring_of_allowed_letters a, b
 end
