@@ -1,30 +1,27 @@
 #!/usr/bin/env ruby
 
-$balanced_hash = {}
+$e = Hash.new
 
-def balanced n
+def e n
   if n == 0
     return ['']
-  elsif $balanced_hash.has_key? n
-    return $balanced_hash [n]
+  elsif $e.has_key? n
+    return $e[n]
   end
 
-  r = []
-  a_len = 0
-  b_len = n - 1
-  while b_len >= 0
-    aa = balanced a_len
-    bb = balanced b_len
-    aa.each do |a|
-      bb.each do |b|
-        r << "(#{a})#{b}"
+  $e[n] = []
+  i = 0
+  j = n - 1
+  while i < n
+    e(i).each do |a|
+      e(j).each do |b|
+        $e[n] << "(#{a})#{b}"
       end
     end
-    a_len += 1
-    b_len -= 1
+    i += 1
+    j -= 1
   end
-  $balanced_hash[n] = r
-  return r
+  return $e[n]
 end
 
 [ [0, ['']],
@@ -35,15 +32,15 @@ end
        '(())()()', '(())(())',
        '(()())()', '((()))()',
        '(()()())', '(()(()))', '((())())', '((()()))', '(((())))']]
-].each do |n, e|
-  a = balanced n
-  if a == e
+].each do |n, exp|
+  a = e n
+  if a == exp
     print 'PASS '
   else
     print 'FAIL '
   end
-  puts "balanced #{n} = #{a}"
-  if a != e
-    puts "     balanced #{n} = #{e}"
+  puts "e #{n} = #{a}"
+  if a != exp
+    puts "     e #{n} = #{exp}"
   end
 end
