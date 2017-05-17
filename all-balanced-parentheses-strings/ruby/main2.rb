@@ -13,6 +13,11 @@ def e l, r, s, e_n
   return e_n
 end
 
+# while true
+#   n = readline.strip.to_i rescue break
+#   puts e n, 0, '', []
+# end
+
 [ [0, ['']],
   [1, ['()']],
   [2, ['()()', '(())']],
