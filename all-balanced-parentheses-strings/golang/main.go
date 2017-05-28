@@ -7,26 +7,36 @@ import (
 	"strconv"
 )
 
-func e(l, r int, s string, e_n []string) ([]string) {
-	if l > 0 {
-		e_n = e(l - 1, r + 1, s + "(", e_n)
+var e_ map[int][]string
+
+func e(n int) ([]string)  {
+	if n == 0 {
+		return []string{""}
+	} else if _, exists := e_[n]; exists {
+		return e_[n]
 	}
-	if r > 0 {
-		e_n = e(l, r - 1, s + ")", e_n)
+	e_[n] = make([]string, 0, 1)
+	i := 0
+	j := n - 1
+	for i < n {
+		for _, a := range e(i) {
+			for _, b := range e(j) {
+				e_[n] = append(e_[n], "(" + a + ")" + b)
+			}
+		}
+		i += 1
+		j -= 1
 	}
-	if l == 0 && r == 0 {
-		e_n = append(e_n, s)
-	}
-	return e_n
+	return e_[n]
 }
 
 func main() {
+	e_ = make(map[int][]string)
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		n, err := strconv.Atoi(scanner.Text())
 		if err != nil { break }
-		o := e(n, 0, "", make([]string, 0, 1))
-		for _, s := range o {
+		for _, s := range e(n) {
 			fmt.Printf("%s\n", s)
 		}
 	}
