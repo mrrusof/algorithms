@@ -34,10 +34,29 @@ public class main {
             }
         }
 
-        if (length % 2 != 0 && !someOdd)
-            return false;
-
         return true;
+    }
+
+    static boolean isPermutationOfPalindromeBitVector(String s) {
+        int bitVector = buildBitVector(s);
+        return bitVector == 0 || ((bitVector - 1) & bitVector) == 0;
+    }
+
+    static int buildBitVector(String s) {
+        int bitVector = 0;
+
+        for (char c : s.toCharArray()) {
+            int bitPos = c - 'a';
+            bitVector = flipBit(bitVector, bitPos);
+        }
+        return bitVector;
+    }
+
+    static int flipBit(int bitVector, int bitPos) {
+        int mask = 1 << bitPos;
+        if ((bitVector & mask) == 0)
+            return bitVector | mask;
+        return bitVector & ~mask;
     }
 
 }
