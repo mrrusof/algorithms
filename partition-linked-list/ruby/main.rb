@@ -54,6 +54,25 @@ def partition_by_buckets h, x
   return left.next
 end
 
+def partition_by_head_tail h, x
+  return nil if h == nil
+  head = tail = h
+  h = h.next
+  while h != nil
+    hh = h.next
+    if h.value < x
+      h.next = head
+      head = h
+    else
+      tail.next = h
+      tail = tail.next
+    end
+    h = hh
+  end
+  tail.next = nil
+  return head
+end
+
 while true
   x = readline.to_i rescue break
   nn = readline.strip.split(' ').map(&:to_i) rescue break
@@ -61,7 +80,11 @@ while true
   nn[1..-1].each do |n|
     c = c.next = Node.new nil, n
   end
+
   # partition_by_swap h, x
   # puts h
-  puts partition_by_buckets h, x
+
+  # puts partition_by_buckets h, x
+
+  puts partition_by_head_tail h, x
 end
