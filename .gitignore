@@ -6,3 +6,4 @@
 *.cmi
 *.cmo
 *.class
+.gradle
