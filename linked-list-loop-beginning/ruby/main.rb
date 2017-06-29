@@ -19,7 +19,7 @@ class Node
 
 end
 
-def loop_beginning h
+def loop_beginning_linear_space h
   visited = Hash.new
   while !!h
     if visited.has_key? h
@@ -29,6 +29,46 @@ def loop_beginning h
     h = h.next
   end
   return nil
+end
+
+def length_of_cycle n
+  c = n.next
+  l = 1
+  while c != n
+    c = c.next
+    l += 1
+  end
+  return l
+end
+
+def any_node_in_cycle h
+  s = f = Node.new h, 0
+  while true
+    (1..2).each do |_|
+      f = f.next
+      return nil if !f
+    end
+    s = s.next
+    return s if s == f
+  end
+end
+
+def loop_beginning_constant_space h
+  n = any_node_in_cycle h
+  return nil if !n
+  l = length_of_cycle n
+  f = h
+  skipped = 0
+  while skipped < l
+    f = f.next
+    skipped += 1
+  end
+  s = h
+  while s != f
+    s = s.next
+    f = f.next
+  end
+  return s
 end
 
 def n val, succ
@@ -46,7 +86,7 @@ d.next = b
 [ [a, b],
   [n(1, n(2, nil)), nil]
 ].each do |h, exp|
-  act = loop_beginning h
+  act = loop_beginning_constant_space h
   if act == exp
     puts "PASS #{n_to_s exp} == #{n_to_s act}"
   else
