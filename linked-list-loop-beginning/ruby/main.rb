@@ -71,6 +71,30 @@ def loop_beginning_constant_space h
   return s
 end
 
+def fast_meets_slow_at_double_slow_distance_from_beginning h
+  s = f = h
+  while !!f and !!f.next
+    s = s.next
+    f = f.next.next
+    return s if s == f
+  end
+  return nil
+end
+
+def step_until_equal a, b
+  while a != b
+    a = a.next
+    b = b.next
+  end
+  return a
+end
+
+def loop_beginning_constant_space_simple h
+  n = fast_meets_slow_at_double_slow_distance_from_beginning h
+  return nil if !n
+  return step_until_equal h, n
+end
+
 def n val, succ
   Node.new succ, val
 end
@@ -86,7 +110,7 @@ d.next = b
 [ [a, b],
   [n(1, n(2, nil)), nil]
 ].each do |h, exp|
-  act = loop_beginning_constant_space h
+  act = loop_beginning_constant_space_simple h
   if act == exp
     puts "PASS #{n_to_s exp} == #{n_to_s act}"
   else
