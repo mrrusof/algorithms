@@ -5,10 +5,11 @@ def equilibrium_index nn
   return 0 if nn.length == 1
   ls = 0
   rs = nn[1..-1].reduce(0, &:+)
-  nn[0..-2].each_with_index do |n, i|
-    return i if ls == rs
-    ls += n
-    rs -= nn[i + 1]
+  return 0 if rs == 0
+  nn[1..-1].each_with_index do |n, i|
+    ls += nn[i]
+    rs -= n
+    return i + 1 if ls == rs
   end
   return -1
 end
