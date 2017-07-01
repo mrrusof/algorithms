@@ -34,6 +34,42 @@ class StackWithMinRubyArray
 
 end
 
+class StackWithMinBetterSoln
+  def initialize
+    @values = Array.new
+    @mins = Array.new
+  end
+
+  def push v
+    @values.push v
+    if !min || !!min && v <= min
+      @mins.push v
+    end
+  end
+
+  def pop
+    raise 'Stack is empty.' if @values.empty?
+    v = @values.pop
+    @mins.pop if v == @mins[-1]
+    return v
+  end
+
+  def min
+    raise 'Stack is empty.' if @values.empty?
+    return @mins[-1]
+  end
+
+  def to_s
+    return '' if @values.empty?
+    out = "| #{@values[0]}"
+    @values[1..-1].each do |v|
+      out += " <- #{v}"
+    end
+    return out
+  end
+
+end
+
 class ArrayStack
 
   def initialize cap = 2
@@ -165,4 +201,8 @@ test s
 s = StackWithMinArrayStack.new
 puts
 puts "StackWithMinArrayStack"
+test s
+s = StackWithMinBetterSoln.new
+puts
+puts "StackWithMinBetterSoln"
 test s
