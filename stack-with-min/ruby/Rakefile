@@ -1,0 +1,3 @@
+task :default do
+  system 'ruby main.rb'
+end
