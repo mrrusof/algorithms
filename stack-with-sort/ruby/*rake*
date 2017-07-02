@@ -1,0 +1,13 @@
+StackWithSort
+push 2, min before , min after 
+2
+push 4, min before , min after 
+2 <- 4
+push 1, min before , min after 
+2 <- 4 <- 1
+push 3, min before , min after 
+2 <- 4 <- 1 <- 3
+pop 3, min before , min after 
+2 <- 4 <- 1
+pop 1, min before , min after 
+2 <- 4
