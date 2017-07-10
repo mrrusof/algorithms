@@ -9,11 +9,40 @@ class MinHeap
       @value = v
     end
 
+    def to_ll
+      vstr = @value.to_s
+      vlen = vstr.length
+      llright = []
+      if !!@right
+        llright = @right.to_ll.map { |l| (' ' * vlen) + ' |' + l }
+      end
+      llleft = []
+      if !!@left
+        llleft = @left.to_ll.map { |l| (' ' * vlen) + ' |' + l }
+      end
+      unless llright.empty? and llleft.empty?
+        vstr += ' |'
+      end
+      return llright + [vstr] + llleft
+    end
+
+    def to_s
+      to_ll.join "\n"
+    end
+
   end
 
   def initialize
     @root = nil
     @put = nil
+  end
+
+  def to_s
+    if !!@root
+      @root.to_s
+    else
+      '<empty>'
+    end
   end
 
   def put v
@@ -130,11 +159,17 @@ class MinHeap
 end
 
 def put v
+  puts "$mh.put #{v}"
   $mh.put v
+  puts $mh
+  puts
 end
 
 def min
-  $mh.extract_min
+  v = $mh.extract_min
+  puts "$mh.extract_min -> #{v}"
+  puts $mh
+  puts
 end
 
 def test
@@ -145,13 +180,13 @@ def test
   put 7
   put 2
   put 1
-  puts min
-  puts min
-  puts min
-  puts min
-  puts min
-  puts min
-  puts min
+  min
+  min
+  min
+  min
+  min
+  min
+  min
 end
 
 test
