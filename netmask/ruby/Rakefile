@@ -1,0 +1,18 @@
+task :default do
+  tmp = `mktemp`
+  ['main.rb',
+   'main_fast.rb'
+  ].each do |p|
+    ['example.in',
+     'example2.in'
+    ].each do |f|
+      print "#{p}: #{f} .. "
+      if (! system "ruby #{p} <../#{f} >#{tmp}") ||
+         (! system "diff ../#{f[0...-2]}out #{tmp}")
+        puts 'FAIL'
+        exit 1
+      end
+      puts 'PASS'
+    end
+  end
+end
