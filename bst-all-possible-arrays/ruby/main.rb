@@ -1,20 +1,20 @@
 #!/usr/bin/env ruby
 
-def apa children, w, acc, curr
-  children[curr].each { |c| w[c] = 1 } if !!children[curr]
+def apa children, cho, acc, curr
+  children[curr].each { |c| cho[c] = 1 } if !!children[curr]
   r = []
-  if w.empty?
+  if cho.empty?
     r << acc + [curr]
   else
-    w.keys.each do |k|
-      w.delete(k)
+    cho.keys.each do |k|
+      cho.delete(k)
       acc.push curr
-      r += apa(children, w, acc, k)
+      r += apa(children, cho, acc, k)
       acc.pop
-      w[k] = 1
+      cho[k] = 1
     end
   end
-  children[curr].each { |c| w.delete c } if !!children[curr]
+  children[curr].each { |c| cho.delete c } if !!children[curr]
   return r
 end
         

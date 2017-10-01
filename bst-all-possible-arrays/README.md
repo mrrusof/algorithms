@@ -5,8 +5,7 @@ tree.  An array produces a tree by inserting the array's elements one
 by one into the tree.  The elements are taken from the array from left
 to right.
 
-**Example**
-
+**Example.**
 Consider the following binary search tree.
 
 ```
