@@ -17,20 +17,20 @@ def sum_reachable g, c, v, f
   return s
 end
 
-def group_frequencies freqs, eqs
+def group_frequencies freqs, eqs # O(A + B + C + D) = O(|F| + |E| + |F| + |F| + |E|) = O(|F| + |E|)
   rf = []
   g = {}
   visited = {}
-  freqs = freqs.to_h
-  eqs.each do |a, b|
+  freqs = freqs.to_h # A: |F|
+  eqs.each do |a, b| # B: |E|
     g[a] ||= []
     g[a] << b
     g[b] ||= []
     g[b] << a
   end
-  freqs.each do |n, f|
+  freqs.each do |n, f| # C: |F|, not multiplied by D
     next if !!visited[n]
-    s = sum_reachable g, n, visited, freqs
+    s = sum_reachable g, n, visited, freqs # D: |F| + |E| in total
     if !!s
       rf << [n, s]
     else
