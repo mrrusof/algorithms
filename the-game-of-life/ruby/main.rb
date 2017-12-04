@@ -8,10 +8,6 @@ def increase_cells row, cells, cols
   }
 end
 
-def alive? h, r, c
-  !!h[r] && !!h[r][c]
-end
-
 def step curr, rows, cols
   neighbors = {}
   curr.each { |r, row|
@@ -28,7 +24,7 @@ def step curr, rows, cols
   succ = {}
   neighbors.each { |r, row|
     row.each { |c, count|
-      if alive?(curr, r, c) && (count == 2 || count == 3) || !alive?(curr, r, c) && count == 3
+      if count == 3 || !!curr[r] && !!curr[r][c] && count == 2
         succ[r] ||= {}
         succ[r][c] = true
       end
