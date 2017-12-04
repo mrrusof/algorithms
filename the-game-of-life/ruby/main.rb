@@ -33,22 +33,36 @@ def step curr, rows, cols
   return succ
 end
 
-def main
-  [ [ { 0 => { 2 => true },
-        1 => { 1 => true },
-        2 => { 2 => true } },
-      4, 4,
-      { 1 => { 1 => true, 2 => true } } ]
+# def main
+#   [ [ { 0 => { 2 => true },
+#         1 => { 1 => true },
+#         2 => { 2 => true } },
+#       4, 4,
+#       { 1 => { 1 => true, 2 => true } } ]
     
-  ].each do |curr, rows, cols, e|
-    a = step curr, rows, cols
-    print "step #{curr}, #{rows}, #{cols} = #{a} ... "
-    if a == e
-      puts 'PASS'
-    else
-      puts 'FAIL'
-    end
-  end
+#   ].each do |curr, rows, cols, e|
+#     a = step curr, rows, cols
+#     print "step #{curr}, #{rows}, #{cols} = #{a} ... "
+#     if a == e
+#       puts 'PASS'
+#     else
+#       puts 'FAIL'
+#     end
+#   end
+# end
+
+def main
+  rows, cols = readline.split(' ').map(&:to_i)
+  curr = {}
+  n = readline.to_i
+  (1..n).each { |_|
+    r, c = readline.split(' ').map(&:to_i)
+    curr[r] ||= {}
+    curr[r][c] = true
+  }
+  s = readline.to_i
+  (1..s).each { |_| curr = step curr, rows, cols }
+  curr.each { |i, row| row.each { |j, cell| puts "#{i} #{j}" if cell } }
 end
 
 main

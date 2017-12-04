@@ -34,32 +34,45 @@ def step curr
   return succ
 end
 
-def hash_to_matrix h, rows, cols
-  (0...rows).map { |r|
-    (0...cols).map { |c|
-      !!h[r] && !!h[r][c]
-    }
-  }
-end
+# def hash_to_matrix h, rows, cols
+#   (0...rows).map { |r|
+#     (0...cols).map { |c|
+#       !!h[r] && !!h[r][c]
+#     }
+#   }
+# end
+
+# def main
+#   [ [ { 0 => { 2 => true },
+#         1 => { 1 => true },
+#         2 => { 2 => true } },
+#       4, 4,
+#       { 1 => { 1 => true, 2 => true } } ]
+    
+#   ].each do |curr, rows, cols, e|
+#     curr = hash_to_matrix curr, rows, cols
+#     e = hash_to_matrix e, rows, cols
+#     a = step curr
+#     print "step #{curr} = #{a} ... "
+#     if a == e
+#       puts 'PASS'
+#     else
+#       puts 'FAIL'
+#     end
+#   end
+# end
 
 def main
-  [ [ { 0 => { 2 => true },
-        1 => { 1 => true },
-        2 => { 2 => true } },
-      4, 4,
-      { 1 => { 1 => true, 2 => true } } ]
-    
-  ].each do |curr, rows, cols, e|
-    curr = hash_to_matrix curr, rows, cols
-    e = hash_to_matrix e, rows, cols
-    a = step curr
-    print "step #{curr} = #{a} ... "
-    if a == e
-      puts 'PASS'
-    else
-      puts 'FAIL'
-    end
-  end
+  rows, cols = readline.split(' ').map(&:to_i)
+  curr = (1..rows).map { |_| (1..cols).map { |_| false } }
+  n = readline.to_i
+  (1..n).each { |_|
+    r, c = readline.split(' ').map(&:to_i)
+    curr[r][c] = true
+  }
+  s = readline.to_i
+  (1..s).each { |_| curr = step curr }
+  curr.each_with_index { |row, i| row.each_with_index { |cell, j| puts "#{i} #{j}" if cell } }
 end
 
 main
