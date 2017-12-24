@@ -1,10 +1,10 @@
-Given two strings `text` and `search`, find the starting index of the
-first occurrence of `search` within `text`.  For example:
+Given two strings `text` and `pattern`, find the starting index of the
+first occurrence of `pattern` within `text`.  For example:
 
 ```
     text: ababcbbabc
           0123456789
-  search: abc
+ pattern:   abc
 ---------------------
 index of: 2
 ```
