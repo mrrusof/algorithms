@@ -90,11 +90,11 @@ end
 def shortest_substring_of_allowed_letters s, allowed
   last = allowed.chars.map { |c| [c, -1] }.to_h
   allowed_count = 0
-  min_left = min_right = left = other_last = -1
+  min_left = min_right = left = forbidden_last = -1
   min_length = s.length + 1
   s.chars.each_with_index do |c, right|
     if last.has_key? c
-      allowed_count += 1 if last[c] <= other_last
+      allowed_count += 1 if last[c] <= forbidden_last
       last[c] = right
       while last[s[left]] != left
         left += 1
@@ -106,7 +106,7 @@ def shortest_substring_of_allowed_letters s, allowed
         min_right = right
       end
     else
-      other_last = right
+      forbidden_last = right
       allowed_count = 0
     end
   end
