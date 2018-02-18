@@ -27,7 +27,6 @@ def shortest_substring_that_contains_letters s, allowed
 
   return '' if r == -1
 
-  found = c.length
   min_len = r - l + 1
   min_l = l
   min_r = r
@@ -67,35 +66,41 @@ def shortest_substring_that_contains_letters s, allowed
 
 end
 
-while true
-  a = readline.strip rescue break
-  b = readline.strip rescue break
-  puts shortest_substring_that_contains_letters a, b
+# while true
+#   a = readline.strip rescue break
+#   b = readline.strip rescue break
+#   puts shortest_substring_that_contains_letters a, b
+# end
+
+def test test_cases, f
+  test_cases.each do |s, l, e|
+    a = send(f, s, l)
+    print "#{f} #{s}, #{l} = #{a} ... "
+    if a == e
+      puts 'PASS'
+    else
+      puts 'FAIL'
+    end
+  end
 end
 
-# def test test_cases, f
-#   test_cases.each do |s, l, e|
-#     a = send(f, s, l)
-#     print "#{f} #{s}, #{l} = #{a} ... "
-#     if a == e
-#       puts 'PASS'
-#     else
-#       puts 'FAIL'
-#     end
-#   end
-# end
+def main
+  test_cases = [ ["697581539",
+                  "915",
+                  "1539"],
+                 ["935185796",
+                  "915",
+                  "9351"],
+                 ["917759",
+                  "957",
+                  "759"],
+                 ["917759",
+                  "71",
+                  "17"],
+                 ["917759",
+                  "8",
+                  ""] ]
+  test test_cases, 'shortest_substring_that_contains_letters'
+end
 
-# def main
-#   test_cases = [ ["917759",
-#                   "957",
-#                   "759"],
-#                  ["917759",
-#                   "71",
-#                   "17"],
-#                  ["917759",
-#                   "8",
-#                   ""] ]
-#   test test_cases, 'shortest_substring_that_contains_letters'
-# end
-
-# main
+main
