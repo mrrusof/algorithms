@@ -1,0 +1,12 @@
+breakfast beach citycenter location metro view staff price
+5
+1
+This hotel has a nice view of the citycenter. The location is perfect.
+2
+The breakfast is ok. Regarding location, it is quite far from citycenter but price is cheap so it is worth.
+1
+Location is excellent, 5 minutes from citycenter. There is also a metro station very close to the hotel.
+1
+They said I couldn't take my dog and there were other guests with dogs! That is not fair.
+2
+Very friendly staff and good cost-benefit ratio. Location is a bit far from citycenter.
