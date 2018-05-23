@@ -1,8 +1,8 @@
-run: main
-	java main <../example1.in
+run: Main
+	java Main <../example1.in
 
-main: main.java
-	javac main.java
+Main: Main.java
+	javac Main.java
 
 clean:
 	rm -rf *.class
