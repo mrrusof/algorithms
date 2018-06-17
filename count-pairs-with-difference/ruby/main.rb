@@ -1,20 +1,12 @@
 #!/usr/bin/env ruby
 
-def count_pairs nn, d # O(n log n + n) = O(n log n)
-  nn.sort! # O(n log n)
+def count_pairs nn, d
+  seen = {}
   count = 0
-  c = 1
-  p = 0
-  while c < nn.length # O(n + n) = O(n)
-    # move candidate position p
-    while nn[p] < nn[c] - d # O(n)
-      p += 1
-    end
-    # do positions p and c make a pair?
-    if nn[p] == nn[c] - d
-      count += 1
-    end
-    c += 1
+  nn.each do |n|
+    count += 1 if seen[n - d]
+    count += 1 if seen[n + d]
+    seen[n] = true
   end
   return count
 end
