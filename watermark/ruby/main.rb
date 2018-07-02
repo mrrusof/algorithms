@@ -6,12 +6,11 @@ def volume_of_segment h, s, e
   h[(s+1)..(e-1)].each do |n|
     volume += watermak - n
   end
-#  puts "volume_of_segment h, #{s}, #{e} = #{volume}"
   return volume
 end
 
 def volume_increasing h
-  return 0 if h == nil || h.empty?
+  return 0 if h.empty?
   volume = 0
   max = h[0]
   maxi = 0
@@ -26,15 +25,13 @@ def volume_increasing h
 end
 
 def volume h
-  return 0 if !!h || h.empty
+  return 0 if h.empty?
   max = h.max
   maxi = h.find_index max
   first_half = h[0..maxi]
   second_half = h[maxi..-1].reverse
   vfh = volume_increasing(first_half)
-#  puts "vfh = #{vfh}"
   vsh = volume_increasing(second_half)
-#  puts "vsh = #{vsh}"
   return vfh + vsh
 end
 
