@@ -1,14 +1,5 @@
 #!/usr/bin/env ruby
 
-def column_prefix_sum m
-  (0...m.length).map do |col|
-    acc = 0
-    [0] + (0...m.length).map do |row|
-      acc += m[row][col]
-    end
-  end
-end
-
 def max_subarray a
   max = nil
   b = e = nil
@@ -29,20 +20,17 @@ def max_subarray a
 end
 
 def max_matrix m
-  cps = column_prefix_sum m
-  puts
-  cps.each { |r| puts r.inspect }
-  puts
   mr1 = mr2 = mc1 = mc2 = 0
   max = nil
   (0...m.length).each do |r1|
-    (r1 + 1..m.length).each do |r2|
-      row_values = (0...m.length).map { |c| cps[c][r2] - cps[c][r1] }
-      c1, c2, max_here = max_subarray row_values
+    col_sum = [0] * m.length
+    (r1...m.length).each do |r2|
+      col_sum.map!.with_index { |v, c| v + m[r2][c] }
+      c1, c2, max_here = max_subarray col_sum
       if max == nil || max < max_here
         max = max_here
         mr1 = r1
-        mr2 = r2 - 1
+        mr2 = r2
         mc1 = c1
         mc2 = c2
       end
@@ -53,6 +41,7 @@ end
 
 def test m
   m.each { |row| puts row.inspect }
+  puts
   puts max_matrix(m).inspect
   puts
 end
