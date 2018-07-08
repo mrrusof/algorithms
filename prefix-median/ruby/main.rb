@@ -131,12 +131,28 @@ class PrefixMedian
   end
 end
 
-def test
+def test input
   pm = PrefixMedian.new
-  [1, 7, 6, 8, 9, 4].each do |v|
+  # input.each do |v|
+  #   pm.push v
+  #   puts "#{v} -> #{pm.median}"
+  # end
+  output = input.map do |v|
     pm.push v
-    puts "#{v} -> #{pm.median}"
+    pm.median
   end
+  puts output.join(' ')
 end
 
-test
+#test [1, 7, 6, 8, 9, 4]
+
+while true
+  input = readline.strip.split(' ').map(&:to_i) rescue break
+  pm = PrefixMedian.new
+  input.each_with_index do |v, i|
+    pm.push v
+    print pm.median
+    print ' ' if i < input.length - 1
+  end
+  puts
+end

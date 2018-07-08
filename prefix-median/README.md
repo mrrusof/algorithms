@@ -11,5 +11,5 @@ current prefix of the sequence at any moment.
 **Output.** Output for example input.
 
 ```
-1 4 6 6.5 7 6.5
+1 4 6 6.5 7
 ```
