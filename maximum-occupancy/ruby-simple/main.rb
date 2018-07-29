@@ -24,21 +24,43 @@
 #   return occupancies.max
 # end
 
-# Really simple? Define simple.
-def maximum_occupancy reservations
-  return nil if reservations.empty?
+# # Really simple? Define simple.
+# def maximum_occupancy reservations
+#   return nil if reservations.empty?
+#   deltas = {}
+#   reservations.each { |r|
+#     i, o = r
+#     deltas[i] ||= 0
+#     deltas[i] += 1
+#     deltas[o] ||= 0
+#     deltas[o] -= 1
+#   }
+#   sorted_deltas = deltas.to_a.sort { |a, b| a.first <=> b.first }
+#   occ = 0
+#   occupancies = sorted_deltas.map { |d| occ += d[1] }
+#   return occupancies.max
+# end
+
+def sorted_deltas reservations
   deltas = {}
-  reservations.each { |r|
-    i, o = r
-    deltas[i] ||= 0
-    deltas[i] += 1
-    deltas[o] ||= 0
-    deltas[o] -= 1
+  reservations.each { |day_in, day_out|
+    deltas[day_in] ||= 0
+    deltas[day_in] += 1
+    deltas[day_out] ||= 0
+    deltas[day_out] -= 1
   }
-  sorted_deltas = deltas.to_a.sort { |a, b| a.first <=> b.first }
+  return deltas.to_a.sort { |a, b| a.first <=> b.first }.map { |day, delta| delta }
+end
+
+def occupancies sorted_deltas
   occ = 0
-  occupancies = sorted_deltas.map { |d| occ += d[1] }
-  return occupancies.max
+  return sorted_deltas.map { |delta| occ += delta }
+end
+
+def maximum_occupancy reservations
+  sd = sorted_deltas reservations
+  occs = occupancies sd
+  return occs.max
 end
 
 n = readline.strip.to_i
