@@ -1,3 +1,4 @@
 task :default do
   system 'ruby main.rb <../example.in'
+  system 'ruby main2.rb <../example.in'
 end
