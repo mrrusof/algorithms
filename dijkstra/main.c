@@ -30,12 +30,12 @@ int main() {
     /* The current node may change the distance to its neighbors, so we update distances. */
     for(i = 0; i < VERTICES; i++)
       if(e[curr][i] != -1 && dist[curr] + e[curr][i] < dist[i])
-	dist[i] = dist[curr] + e[curr][i];
+        dist[i] = dist[curr] + e[curr][i];
     /* Select the next node. The next node is a node that we have not visited and has the smallest cost. */
     for(cost = INT_MAX, i = 0; i < VERTICES; i++)
       if(visited[i] == 0 && dist[i] < cost) {
-	cost = dist[i];
-	curr = i;
+        cost = dist[i];
+        curr = i;
       }
   }
   printf("The distance between origin %d and destination %d is %d\n", orig+1, dest+1, dist[dest]);
