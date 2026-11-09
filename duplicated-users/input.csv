@@ -1,0 +1,5 @@
+id,first_name,last_name,email,zip_code,address
+1,A,S,ana@example.com,,123 Maple St.
+2,A,Sanchez,ana@example.com,48271,123 Maple St.
+3,Alicia,S,alicia@example.com,48271,
+4,Carlos,M,carlos@example.com,64753,654 Pamela Dr.
